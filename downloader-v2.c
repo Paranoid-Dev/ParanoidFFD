@@ -1,4 +1,4 @@
-#include <Python.h>
+#include <Python.h>	//	>=Python3.6
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -147,7 +147,12 @@ int main (int argc, char *argv[]) {
 			PyRun_SimpleString("import undetected_chromedriver as uc");
 			mainModule = PyImport_AddModule("__main__");
 
-			PyRun_SimpleString("url = input()");
+			PyRun_SimpleString("yurl = input()");
+			PyRun_SimpleString("zurl = yurl.replace('https://', '')");
+			PyRun_SimpleString("furl = zurl.replace('http://', '')");
+			PyRun_SimpleString("aurl = '/'.join(furl.split('/', 3)[:3])");
+			PyRun_SimpleString("url = f\"https://{aurl}\"");
+			
 			description ();
 			
 			i = 0;
