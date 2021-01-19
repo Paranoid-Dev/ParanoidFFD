@@ -21,8 +21,6 @@ int download () {
 
 	PyObject *chapterPy = PyObject_GetAttrString(mainModule, "chapter");
 	chapter[i] = PyUnicode_AsUTF8(chapterPy);
-//  printf("%s", chapter[i]);
-  
 }
 
 int description () {
@@ -39,19 +37,22 @@ int description () {
 	PyRun_SimpleString("chrome.quit()");
 	
 	PyObject *titlePy = PyObject_GetAttrString(mainModule, "title");
-	title = PyUnicode_AsUTF8(titlePy);										//title
+	title = PyUnicode_AsUTF8(titlePy);												//title
 	PyObject *authorPy = PyObject_GetAttrString(mainModule, "author");
-	author = PyUnicode_AsUTF8(authorPy);									//author
+	author = PyUnicode_AsUTF8(authorPy);											//author
 	PyObject *summaryPy = PyObject_GetAttrString(mainModule, "summary");
-	summary = PyUnicode_AsUTF8(summaryPy);									//summary
+	summary = PyUnicode_AsUTF8(summaryPy);											//summary
 	PyObject *infoPy = PyObject_GetAttrString(mainModule, "info");
-	info = PyUnicode_AsUTF8(infoPy);										//info
-	PyObject *chapterlistPy = PyObject_GetAttrString(mainModule, "chapterlist");
-//	chapterlistbuf = PyUnicode_AsUTF8(chapterlistPy);						//chapter-list
+	info = PyUnicode_AsUTF8(infoPy);												//info
+	PyObject *chapterlistPy = PyObject_GetAttrString(mainModule, "chapterlist");	//chapter-list
+//	chapterlistbuf = PyUnicode_AsUTF8(chapterlistPy);	//used const char * instead
 	
 	//chapterlist parsing
 	j = 1;
-//	char *chapterlist = chapterlistbuf;
+	
+//	| method 1 - disabled for now |
+	
+//	char * chapterlist = PyUnicode_AsUTF8(chapterlistPy);
 //	while (chapterlist) {
 //		j = j + 1;
 //		char * nextLine = strchr(chapterlist, '\n');
@@ -64,6 +65,8 @@ int description () {
 //		//printf("j:%d %s\n", j, chaptername[j]);
 //	}
 	
+//	| method 2 - longer than method 1, but works well enough |
+	
 	const char * chapterlist = PyUnicode_AsUTF8(chapterlistPy);
 	while(chapterlist) {
 		const char * nextLine = strchr(chapterlist, '\n');
@@ -72,7 +75,7 @@ int description () {
 		if (chaptername[j]) {
 			memcpy(chaptername[j], chapterlist, chapterlistLen);
 			chaptername[j][chapterlistLen] = '\0';  // NUL-terminate
-//			printf("chaptername[j]=[%s]\n", chaptername[j]);
+//			printf("chaptername[j]=[%s]\n", chaptername[j]);	//debug purposes
 			j = j + 1;
 		}
 		else printf("chapter parsing failed - please open an issue at github.com/Paranoid-Dev/ParanoidFFD\n");
@@ -89,15 +92,19 @@ int next () {
 }
 
 int print () {
-
-//	printf("j:%d\n", j);
+	
+//	cleaning up before exiting
+	PyRun_SimpleString("chrome.quit()");
+	Py_Finalize();
+	
 	int a = 1;
 	int b = 1;
 	printf("%s\n", title);
-	printf("By %s\n\n", author);
-	printf("%s\n\n", summary);
-	printf("%s\n\n\n", info);
-	printf("Chapters\n");
+	printf("By %s\n", author);
+	printf("Downloaded with ParanoidFFD, made with passion by Paranoid-Dev\n\n");
+	printf("%s\n\n", info);
+	printf("%s\n\n\n", summary);
+	printf("Chapters\n\n");
 
 	while (b <= j) {
 		printf("%s\n", chaptername[b]);
@@ -105,7 +112,7 @@ int print () {
 	}
 	printf("\n\n\n");
 	while (a <= j) {
-		printf("< %s > \n\n", chaptername[a]);
+		printf("| %s |\n\n", chaptername[a]);
 		printf("%s\n\n", chapter[a]);
 		a = a + 1;
 	}
@@ -147,8 +154,6 @@ int main (int argc, char *argv[]) {
 			
 			while (1) {
 				download ();
-				//if chapter[i-2] == chapter[i]; break; Py_Finalize(); print ();
-				//if (strcmp(chapter[i-2], chapter[i]) == 0) {
 				if (i == j) {
 					print ();
 					break;
@@ -165,6 +170,6 @@ int main (int argc, char *argv[]) {
 			system(buf);
 		}
 	}
-	
+
 	return 0;
 }
