@@ -145,10 +145,6 @@ int main (int argc, char *argv[]) {
 			
 			i = 0;
 			
-			download ();
-			next ();
-			download ();
-			next ();
 			while (1) {
 				download ();
 				//if chapter[i-2] == chapter[i]; break; Py_Finalize(); print ();
