@@ -35,7 +35,7 @@ int description () {
 	PyRun_SimpleString("author = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/a[1]').text");
 	PyRun_SimpleString("summary = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/div').text");
 	PyRun_SimpleString("try: info = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/span[4]').text\nexcept: info = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/span[3]').text");
-	PyRun_SimpleString("chapterlist = chrome.find_element_by_xpath('//*[@id=\"chap_select\"]').text");
+	PyRun_SimpleString("try: chapterlist = chrome.find_element_by_xpath('//*[@id=\"chap_select\"]').text\nexcept: chapterlist = title");
 	PyRun_SimpleString("chrome.quit()");
 	
 	PyObject *titlePy = PyObject_GetAttrString(mainModule, "title");
