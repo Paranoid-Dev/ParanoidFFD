@@ -4,9 +4,10 @@
 #include <stdlib.h>
 
 char* chapter[2048];
-char *title, *author, *summary, *info, *chapterlist;
+char* chaptername[2048];
+char *title, *author, *summary, *info;
 PyObject *mainModule;
-int i;
+int i, j;
 
 int download () {
 	PyRun_SimpleString("options = uc.ChromeOptions()");
@@ -46,7 +47,38 @@ int description () {
 	PyObject *infoPy = PyObject_GetAttrString(mainModule, "info");
 	info = PyUnicode_AsUTF8(infoPy);										//info
 	PyObject *chapterlistPy = PyObject_GetAttrString(mainModule, "chapterlist");
-	chapterlist = PyUnicode_AsUTF8(chapterlistPy);						//chapter-list
+//	chapterlistbuf = PyUnicode_AsUTF8(chapterlistPy);						//chapter-list
+	
+	//chapterlist parsing
+	j = 1;
+//	char *chapterlist = chapterlistbuf;
+//	while (chapterlist) {
+//		j = j + 1;
+//		char * nextLine = strchr(chapterlist, '\n');
+//		if (nextLine) *nextLine = '\0';  // temporarily terminate the current line
+//		chaptername[j] = chapterlist;
+//		//printf("chapterlist=%s\n", chapterlist);
+//		if (nextLine) *nextLine = '\n';  // then restore newline-char 
+//		chapterlist = nextLine ? (nextLine+1) : NULL;
+//		
+//		//printf("j:%d %s\n", j, chaptername[j]);
+//	}
+	
+	const char * chapterlist = PyUnicode_AsUTF8(chapterlistPy);
+	while(chapterlist) {
+		const char * nextLine = strchr(chapterlist, '\n');
+		int chapterlistLen = nextLine ? (nextLine-chapterlist) : strlen(chapterlist);
+		chaptername[j] = (char *) malloc(chapterlistLen+1);
+		if (chaptername[j]) {
+			memcpy(chaptername[j], chapterlist, chapterlistLen);
+			chaptername[j][chapterlistLen] = '\0';  // NUL-terminate
+//			printf("chaptername[j]=[%s]\n", chaptername[j]);
+			j = j + 1;
+		}
+		else printf("chapter parsing failed - please open an issue at github.com/Paranoid-Dev/ParanoidFFD\n");
+		chapterlist = nextLine ? (nextLine+1) : NULL;
+	}
+	j = j - 1;
 }
 
 int next () {
@@ -57,20 +89,25 @@ int next () {
 }
 
 int print () {
-	i = i - 1;
-	//printf("i:%d", i);
+
+//	printf("j:%d\n", j);
 	int a = 1;
+	int b = 1;
 	printf("%s\n", title);
 	printf("By %s\n\n", author);
 	printf("%s\n\n", summary);
 	printf("%s\n\n\n", info);
 	printf("Chapters\n");
-	printf("%s\n\n\n", chapterlist);
-	while (i > 0) {
-		printf("Chapter %d : \n\n", a); //should change
+
+	while (b <= j) {
+		printf("%s\n", chaptername[b]);
+		b = b + 1;
+	}
+	printf("\n\n\n");
+	while (a <= j) {
+		printf("< %s > \n\n", chaptername[a]);
 		printf("%s\n\n", chapter[a]);
 		a = a + 1;
-		i = i - 1;
 	}
 }
 
@@ -115,7 +152,8 @@ int main (int argc, char *argv[]) {
 			while (1) {
 				download ();
 				//if chapter[i-2] == chapter[i]; break; Py_Finalize(); print ();
-				if (strcmp(chapter[i-2], chapter[i]) == 0) {
+				//if (strcmp(chapter[i-2], chapter[i]) == 0) {
+				if (i == j) {
 					print ();
 					break;
 				}
