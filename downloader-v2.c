@@ -150,8 +150,9 @@ int main (int argc, char *argv[]) {
 			PyRun_SimpleString("yurl = input()");
 			PyRun_SimpleString("zurl = yurl.replace('https://', '')");
 			PyRun_SimpleString("furl = zurl.replace('http://', '')");
-			PyRun_SimpleString("aurl = '/'.join(furl.split('/', 3)[:3])");
-			PyRun_SimpleString("url = f\"https://{aurl}\"");
+			PyRun_SimpleString("aurl = furl.replace('www.', '')");
+			PyRun_SimpleString("burl = '/'.join(aurl.split('/', 3)[:3])");
+			PyRun_SimpleString("url = f\"https://www.{burl}\"");
 			
 			description ();
 			
