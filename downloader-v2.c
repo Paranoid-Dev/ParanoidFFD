@@ -13,8 +13,10 @@ int download () {
 	PyRun_SimpleString("options = uc.ChromeOptions()");
 	PyRun_SimpleString("options.headless = True");
 	PyRun_SimpleString("options.add_argument('--headless')");
+	PyRun_SimpleString("options.binary_location = chromepath");
 	PyRun_SimpleString("chrome = uc.Chrome(options=options)");
 	PyRun_SimpleString("chrome.get(url)");
+	PyRun_SimpleString("sleep(random.uniform(1, 2))");	//delay 1~2 seconds randomly
 	PyRun_SimpleString("chapter = chrome.find_element_by_xpath('//*[@id=\"storytext\"]').text");
 
 	i = i + 1;
@@ -27,8 +29,10 @@ int description () {
 	PyRun_SimpleString("options = uc.ChromeOptions()");
 	PyRun_SimpleString("options.headless = True");
 	PyRun_SimpleString("options.add_argument('--headless')");
+	PyRun_SimpleString("options.binary_location = chromepath");
 	PyRun_SimpleString("chrome = uc.Chrome(options=options)");
 	PyRun_SimpleString("chrome.get(url)");
+	PyRun_SimpleString("sleep(random.uniform(1, 2))");	//delay 1~2 seconds randomly
 	PyRun_SimpleString("title = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/b').text");
 	PyRun_SimpleString("author = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/a[1]').text");
 	PyRun_SimpleString("summary = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/div').text");
@@ -87,6 +91,7 @@ int description () {
 int next () {
 	PyRun_SimpleString("try: next = chrome.find_element_by_xpath('//*[@id=\"content_wrapper_inner\"]/span/button[2]')\nexcept: next = chrome.find_element_by_xpath('//*[@id=\"content_wrapper_inner\"]/span/button')");
 	PyRun_SimpleString("next.click()");
+	PyRun_SimpleString("sleep(random.uniform(1, 2))");	//delay 1~2 seconds randomly
 	PyRun_SimpleString("url = chrome.current_url");
 	PyRun_SimpleString("chrome.quit()");
 }
@@ -119,7 +124,7 @@ int print () {
 }
 
 int help () {
-	printf("                Paranoid FanFiction.net Downloader v0.1.1  by Paranoid-Dev                \n");
+	printf("                Paranoid FanFiction.net Downloader v1.0.1  by Paranoid-Dev                \n");
 	printf(" ________________________________________________________________________________________ \n");
 	printf("                                                                                          \n");
 	printf("Usage : ./ParanoidFFD <output file name(.txt)> <www.fanfiction.net url>                   \n");
@@ -134,7 +139,7 @@ int main (int argc, char *argv[]) {
 	if (argc > 1) {
 		
 		if (strcmp(argv[1], "--version") == 0) {
-			printf("Paranoid FanFiction.net Downloader v0.1.1 \n");
+			printf("Paranoid FanFiction.net Downloader v1.0.1 \n");
 		}
 		else if (strcmp(argv[1], "--help") == 0) {
 			help ();
@@ -143,8 +148,22 @@ int main (int argc, char *argv[]) {
 			help ();
 		}
 		else if (strcmp(argv[1], "-p") == 0) { //downloader
+			
 			Py_Initialize();
 			PyRun_SimpleString("import undetected_chromedriver as uc");
+			PyRun_SimpleString("import random");
+			PyRun_SimpleString("from time import sleep");
+			
+			PyRun_SimpleString("uc.TARGET_VERSION = 88");
+			//os detection
+			#ifdef _WIN64
+				PyRun_SimpleString("chromepath = 'chrome-win\\chrome.exe'");
+			#elif __linux__
+				PyRun_SimpleString("chromepath = 'chrome-linux/chrome'");
+			#else
+				printf("unsupported OS\n");
+			#endif
+			
 			mainModule = PyImport_AddModule("__main__");
 
 			PyRun_SimpleString("yurl = input()");
