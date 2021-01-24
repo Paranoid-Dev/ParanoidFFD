@@ -154,13 +154,16 @@ int main (int argc, char *argv[]) {
 			PyRun_SimpleString("import random");
 			PyRun_SimpleString("from time import sleep");
 			
+			PyRun_SimpleString("uc.TARGET_VERSION = 88");
 			//os detection
 			#ifdef _WIN64
 				PyRun_SimpleString("chromepath = 'vendor\\chrome-win\\chrome.exe'");
 				//PyRun_SimpleString("chromedriverpath = 'vendor\\undetected_chromedriver\\chromedriver.exe'");
+				system("del chromedriver.exe > nul 2> nul");
 			#elif __linux__
 				PyRun_SimpleString("chromepath = 'vendor/chrome-linux/chrome'");
 				//PyRun_SimpleString("chromedriverpath = 'vendor/undetected_chromedriver/chromedriver'");
+				system("rm -f chromedriver");
 			#else
 				printf("unsupported OS\n");
 			#endif

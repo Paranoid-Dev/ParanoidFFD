@@ -154,6 +154,15 @@ int main (int argc, char *argv[]) {
 			
 			mainModule = PyImport_AddModule("__main__");
 
+			//os detection
+			#ifdef _WIN64
+				system("del chromedriver.exe > nul 2> nul");
+			#elif __linux__
+				system("rm -f chromedriver");
+			#else
+				printf("unsupported OS\n");
+			#endif
+			
 			PyRun_SimpleString("yurl = input()");
 			PyRun_SimpleString("zurl = yurl.replace('https://', '')");
 			PyRun_SimpleString("furl = zurl.replace('http://', '')");
