@@ -13,7 +13,7 @@ int download () {
 	PyRun_SimpleString("options = uc.ChromeOptions()");
 	PyRun_SimpleString("options.headless = True");
 	PyRun_SimpleString("options.add_argument('--headless')");
-	PyRun_SimpleString("options.binary_location = chromepath");
+	//PyRun_SimpleString("options.binary_location = chromepath");
 	PyRun_SimpleString("chrome = uc.Chrome(options=options)");
 	PyRun_SimpleString("chrome.get(url)");
 	PyRun_SimpleString("sleep(random.uniform(1, 2))");	//delay 1~2 seconds randomly
@@ -29,7 +29,7 @@ int description () {
 	PyRun_SimpleString("options = uc.ChromeOptions()");
 	PyRun_SimpleString("options.headless = True");
 	PyRun_SimpleString("options.add_argument('--headless')");
-	PyRun_SimpleString("options.binary_location = chromepath");
+	//PyRun_SimpleString("options.binary_location = chromepath");
 	PyRun_SimpleString("chrome = uc.Chrome(options=options)");
 	PyRun_SimpleString("chrome.get(url)");
 	PyRun_SimpleString("sleep(random.uniform(1, 2))");	//delay 1~2 seconds randomly
@@ -124,7 +124,7 @@ int print () {
 }
 
 int help () {
-	printf("                Paranoid FanFiction.net Downloader v1.0.1  by Paranoid-Dev                \n");
+	printf("            Paranoid FanFiction.net Downloader v1.0.1 portable by Paranoid-Dev            \n");
 	printf(" ________________________________________________________________________________________ \n");
 	printf("                                                                                          \n");
 	printf("Usage : ./ParanoidFFD <output file name(.txt)> <www.fanfiction.net url>                   \n");
@@ -139,7 +139,7 @@ int main (int argc, char *argv[]) {
 	if (argc > 1) {
 		
 		if (strcmp(argv[1], "--version") == 0) {
-			printf("Paranoid FanFiction.net Downloader v1.0.1 \n");
+			printf("Paranoid FanFiction.net Downloader v1.0.1 portable \n");
 		}
 		else if (strcmp(argv[1], "--help") == 0) {
 			help ();
@@ -154,12 +154,13 @@ int main (int argc, char *argv[]) {
 			PyRun_SimpleString("import random");
 			PyRun_SimpleString("from time import sleep");
 			
-			PyRun_SimpleString("uc.TARGET_VERSION = 88");
 			//os detection
 			#ifdef _WIN64
-				PyRun_SimpleString("chromepath = 'chrome-win\\chrome.exe'");
+				PyRun_SimpleString("chromepath = 'vendor\\chrome-win\\chrome.exe'");
+				//PyRun_SimpleString("chromedriverpath = 'vendor\\undetected_chromedriver\\chromedriver.exe'");
 			#elif __linux__
-				PyRun_SimpleString("chromepath = 'chrome-linux/chrome'");
+				PyRun_SimpleString("chromepath = 'vendor/chrome-linux/chrome'");
+				//PyRun_SimpleString("chromedriverpath = 'vendor/undetected_chromedriver/chromedriver'");
 			#else
 				printf("unsupported OS\n");
 			#endif
@@ -192,7 +193,15 @@ int main (int argc, char *argv[]) {
 			size_t l;
 			l = strlen(argv[1]) + strlen(argv[2]) + 43;
 			char buf[l];
-			sprintf(buf, "echo \"%s\" | ./ParanoidFFD -p > \"%s.txt\"",argv[2],argv[1]);
+			//os detection
+			#ifdef _WIN64
+				sprintf(buf, "echo \"%s\" | ParanoidFFD -p > \"%s.txt\"",argv[2],argv[1]);
+			#elif __linux__
+				sprintf(buf, "echo \"%s\" | ./ParanoidFFD -p > \"%s.txt\"",argv[2],argv[1]);
+			#else
+				printf("unsupported OS\n");
+			#endif
+			
 			system(buf);
 		}
 	}
