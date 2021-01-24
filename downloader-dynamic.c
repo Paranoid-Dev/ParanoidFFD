@@ -100,6 +100,15 @@ int print () {
 	PyRun_SimpleString("chrome.quit()");
 	Py_Finalize();
 	
+	//clean up chromedriver
+	#ifdef _WIN64
+		system("del chromedriver.exe > nul 2> nul");
+	#elif __linux__
+		system("rm -f chromedriver");
+	#else
+		printf("unsupported OS\n");
+	#endif
+	
 	int a = 1;
 	int b = 1;
 	printf("%s\n", title);
@@ -153,15 +162,6 @@ int main (int argc, char *argv[]) {
 			PyRun_SimpleString("from time import sleep");
 			
 			mainModule = PyImport_AddModule("__main__");
-
-			//os detection
-			#ifdef _WIN64
-				system("del chromedriver.exe > nul 2> nul");
-			#elif __linux__
-				system("rm -f chromedriver");
-			#else
-				printf("unsupported OS\n");
-			#endif
 			
 			PyRun_SimpleString("yurl = input()");
 			PyRun_SimpleString("zurl = yurl.replace('https://', '')");
