@@ -1,4 +1,4 @@
-#include <Python.h>	//	>=Python3.6
+#include <Python.h>	//	>= Python3.6
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -30,13 +30,12 @@ int description () {
 	PyRun_SimpleString("options.add_argument('--headless')");
 	PyRun_SimpleString("chrome = uc.Chrome(options=options)");
 	PyRun_SimpleString("chrome.get(url)");
-	PyRun_SimpleString("sleep(random.uniform(1, 2))");	//delay 1~2 seconds randomly
+	PyRun_SimpleString("sleep(random.uniform(7, 9))");	//delay 7~9 seconds randomly for first time page load
 	PyRun_SimpleString("title = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/b').text");
 	PyRun_SimpleString("author = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/a[1]').text");
 	PyRun_SimpleString("summary = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/div').text");
 	PyRun_SimpleString("try: info = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/span[4]').text\nexcept: info = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/span[3]').text");
 	PyRun_SimpleString("try: chapterlist = chrome.find_element_by_xpath('//*[@id=\"chap_select\"]').text\nexcept: chapterlist = title");
-	PyRun_SimpleString("chrome.quit()");
 	
 	PyObject *titlePy = PyObject_GetAttrString(mainModule, "title");
 	title = PyUnicode_AsUTF8(titlePy);												//title
@@ -47,28 +46,10 @@ int description () {
 	PyObject *infoPy = PyObject_GetAttrString(mainModule, "info");
 	info = PyUnicode_AsUTF8(infoPy);												//info
 	PyObject *chapterlistPy = PyObject_GetAttrString(mainModule, "chapterlist");	//chapter-list
-//	chapterlistbuf = PyUnicode_AsUTF8(chapterlistPy);	//used const char * instead
-	
+
 	//chapterlist parsing
 	j = 1;
-	
-//	| method 1 - disabled for now |
-	
-//	char * chapterlist = PyUnicode_AsUTF8(chapterlistPy);
-//	while (chapterlist) {
-//		j = j + 1;
-//		char * nextLine = strchr(chapterlist, '\n');
-//		if (nextLine) *nextLine = '\0';  // temporarily terminate the current line
-//		chaptername[j] = chapterlist;
-//		//printf("chapterlist=%s\n", chapterlist);
-//		if (nextLine) *nextLine = '\n';  // then restore newline-char 
-//		chapterlist = nextLine ? (nextLine+1) : NULL;
-//		
-//		//printf("j:%d %s\n", j, chaptername[j]);
-//	}
-	
-//	| method 2 - longer than method 1, but works well enough |
-	
+
 	const char * chapterlist = PyUnicode_AsUTF8(chapterlistPy);
 	while(chapterlist) {
 		const char * nextLine = strchr(chapterlist, '\n');
@@ -86,32 +67,7 @@ int description () {
 	j = j - 1;
 }
 
-int next () {
-//	PyRun_SimpleString("try: next = chrome.find_element_by_xpath('//*[@id=\"content_wrapper_inner\"]/span/button[2]')\nexcept: next = chrome.find_element_by_xpath('//*[@id=\"content_wrapper_inner\"]/span/button')");
-//	PyRun_SimpleString("next.click()");
-//	PyRun_SimpleString("sleep(random.uniform(1, 2))");	//delay 1~2 seconds randomly
-//	PyRun_SimpleString("url = chrome.current_url");
-	PyRun_SimpleString("chrome.quit()");
-	
-	PyRun_SimpleString("i += 1");
-	PyRun_SimpleString("url = f\"https://www.{burl}/{i}\"");
-}
-
 int print () {
-	
-//	cleaning up before exiting
-	PyRun_SimpleString("chrome.quit()");
-	Py_Finalize();
-	
-	//clean up chromedriver
-	#ifdef _WIN64
-		system("del chromedriver.exe > nul 2> nul");
-	#elif __linux__
-		system("rm -f chromedriver");
-	#else
-		printf("unsupported OS\n");
-	#endif
-	
 	int a = 1;
 	int b = 1;
 	printf("%s\n", title);
@@ -145,7 +101,6 @@ int help () {
 }
 
 int main (int argc, char *argv[]) {
-
 	if (argc > 1) {
 		
 		if (strcmp(argv[1], "--version") == 0) {
@@ -182,10 +137,21 @@ int main (int argc, char *argv[]) {
 			while (1) {
 				download ();
 				if (i == j) {
+					//	cleaning up before exiting
+					PyRun_SimpleString("chrome.quit()");
+					Py_Finalize();
+					#ifdef _WIN64
+						system("del chromedriver.exe > nul 2> nul");
+					#elif __linux__
+						system("rm -f chromedriver");
+					#else
+						printf("unsupported OS\n");
+					#endif
 					print ();
 					break;
 				}
-				next ();
+				PyRun_SimpleString("i += 1");
+				PyRun_SimpleString("url = f\"https://www.{burl}/{i}\"");
 			}
 		}
 		else {
@@ -193,7 +159,6 @@ int main (int argc, char *argv[]) {
 			size_t l;
 			l = strlen(argv[1]) + strlen(argv[2]) + 43;
 			char buf[l];
-			//os detection
 			#ifdef _WIN32
 				sprintf(buf, "echo \"%s\" | ParanoidFFD -p > \"%s.txt\"",argv[2],argv[1]);
 			#elif __linux__
@@ -201,7 +166,6 @@ int main (int argc, char *argv[]) {
 			#else
 				printf("unsupported OS\n");
 			#endif
-			
 			system(buf);
 		}
 	}
