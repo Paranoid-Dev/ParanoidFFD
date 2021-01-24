@@ -89,11 +89,14 @@ int description () {
 }
 
 int next () {
-	PyRun_SimpleString("try: next = chrome.find_element_by_xpath('//*[@id=\"content_wrapper_inner\"]/span/button[2]')\nexcept: next = chrome.find_element_by_xpath('//*[@id=\"content_wrapper_inner\"]/span/button')");
-	PyRun_SimpleString("next.click()");
-	PyRun_SimpleString("sleep(random.uniform(1, 2))");	//delay 1~2 seconds randomly
-	PyRun_SimpleString("url = chrome.current_url");
+//	PyRun_SimpleString("try: next = chrome.find_element_by_xpath('//*[@id=\"content_wrapper_inner\"]/span/button[2]')\nexcept: next = chrome.find_element_by_xpath('//*[@id=\"content_wrapper_inner\"]/span/button')");
+//	PyRun_SimpleString("next.click()");
+//	PyRun_SimpleString("sleep(random.uniform(1, 2))");	//delay 1~2 seconds randomly
+//	PyRun_SimpleString("url = chrome.current_url");
 	PyRun_SimpleString("chrome.quit()");
+	
+	PyRun_SimpleString("i += 1");
+	PyRun_SimpleString("url = f\"https://www.{burl}/{i}\"");
 }
 
 int print () {
@@ -183,7 +186,8 @@ int main (int argc, char *argv[]) {
 			PyRun_SimpleString("durl = furl.replace('www.', '')");
 			PyRun_SimpleString("aurl = durl.replace('m.', '')");
 			PyRun_SimpleString("burl = '/'.join(aurl.split('/', 3)[:3])");
-			PyRun_SimpleString("url = f\"https://www.{burl}\"");
+			PyRun_SimpleString("i = 1");
+			PyRun_SimpleString("url = f\"https://www.{burl}/{i}\"");
 			
 			description ();
 			
