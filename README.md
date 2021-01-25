@@ -30,3 +30,5 @@ cd ..
 I haven't tried to compile this on Windows yet, but the code will work on Windows too.
 
 Just make sure Python 3.6 or higher is installed, and `pip install undetected-chromedriver`
+
+Download static compiled chromium from [here](https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Win_x64%2F827102%2Fchrome-win.zip?generation=1605234361586654&alt=media) and rename the folder name to `chrome-win`.
