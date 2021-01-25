@@ -7,9 +7,9 @@ chrome = uc.Chrome(options=options)
 url = input()
 chrome.get(url)
 
-with open("./out.txt", "w") as f:
+with open("./out.html", "w") as f:
     try:
-        f.write(chrome.find_element_by_xpath('//*[@id=\"chap_select\"]').text)
+        f.write(chrome.find_element_by_xpath('//*[@id=\"storytext\"]').get_attribute("innerHTML"))
     except:
         f.write(chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/span[3]').text)
 chrome.quit()
