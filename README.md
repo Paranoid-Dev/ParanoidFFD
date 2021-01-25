@@ -10,14 +10,14 @@ So I made my own "unblockable" downloader using [undetected_chromedriver](https:
 ```
 pikaur -S google-chrome # just here to demonstrate you need the latest google-chrome / chromium
 pacman -S python3
-pip install undetected-chromedriver
+pip3 install undetected-chromedriver
 ./portable-compile.sh
 ```
 **Note** Dynamic version requires the latest google-chrome / chromium install in the default location. If your system fails to meet this, use the portable version
 ### Portable
 ```
 pacman -S python3
-pip install undetected-chromedriver
+pip3 install undetected-chromedriver
 mkdir vendor
 cd vendor
 wget "https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2F827102%2Fchrome-linux.zip?generation=1605233458736188&alt=media" -O chrome-linux.zip
