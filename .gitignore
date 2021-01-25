@@ -1,4 +1,4 @@
 vendor/
 ParanoidFFD
 chromedriver
-output.txt
+*.txt
