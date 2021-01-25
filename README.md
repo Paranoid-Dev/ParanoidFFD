@@ -7,14 +7,16 @@ So I made my own "unblockable" downloader using [undetected_chromedriver](https:
 
 ## Installation (Linux)
 ### Dynamic
-```pikaur -S google-chrome # just here to demonstrate you need the latest google-chrome / chromium
+```
+pikaur -S google-chrome # just here to demonstrate you need the latest google-chrome / chromium
 pacman -S python3
 pip install undetected-chromedriver
 ./portable-compile.sh
 ```
 **Note** Dynamic version requires the latest google-chrome / chromium install in the default location. If your system fails to meet this, use the portable version
 ### Portable
-```pacman -S python3
+```
+pacman -S python3
 pip install undetected-chromedriver
 mkdir vendor
 cd vendor
