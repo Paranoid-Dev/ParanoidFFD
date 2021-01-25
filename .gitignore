@@ -1,4 +1,6 @@
 vendor/
+etc/
 ParanoidFFD
 chromedriver
 *.txt
+*.html
