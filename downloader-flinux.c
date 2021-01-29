@@ -121,8 +121,8 @@ int main (int argc, char *argv[]) {
 			PyRun_SimpleString("import random");
 			PyRun_SimpleString("from time import sleep");
 			
-			PyRun_SimpleString("uc.TARGET_VERSION = 70");
-			PyRun_SimpleString("chromepath = 'vendor/chrome-linux32/chrome'");
+			PyRun_SimpleString("uc.TARGET_VERSION = 51");
+			PyRun_SimpleString("chromepath = 'vendor/chrome-linux/chrome'");
 			
 			mainModule = PyImport_AddModule("__main__");
 
