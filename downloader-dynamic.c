@@ -2,26 +2,32 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+//#include <unistd.h>
 
 char* chapter[2048];
 char* chaptername[2048];
-char *title, *author, *summary, *info;
+char *title, *author, *summary, *info, *filename;
 PyObject *mainModule;
 int i, j;
+int f = 1;
+int fname = 1;
 
 int download () {
+	i = i + 1;
+	printf("Fetching chapter %d...\n",i);
 	PyRun_SimpleString("options = uc.ChromeOptions()");
 	PyRun_SimpleString("options.headless = True");
 	PyRun_SimpleString("options.add_argument('--headless')");
 	PyRun_SimpleString("chrome = uc.Chrome(options=options)");
 	PyRun_SimpleString("chrome.get(url)");
+	printf("Random delay before downloading to look unsuspicious\n");
 	PyRun_SimpleString("sleep(random.uniform(1, 2))");	//delay 1~2 seconds randomly
+	printf("Downloading chapter %d...\n",i);
 	PyRun_SimpleString("chapter = chrome.find_element_by_xpath('//*[@id=\"storytext\"]').text");
-
-	i = i + 1;
 
 	PyObject *chapterPy = PyObject_GetAttrString(mainModule, "chapter");
 	chapter[i] = PyUnicode_AsUTF8(chapterPy);
+	printf("Chapter %d downloaded\n",i);
 }
 
 int description () {
@@ -30,7 +36,9 @@ int description () {
 	PyRun_SimpleString("options.add_argument('--headless')");
 	PyRun_SimpleString("chrome = uc.Chrome(options=options)");
 	PyRun_SimpleString("chrome.get(url)");
+	printf("Random delay before downloading to look unsuspicious\n");
 	PyRun_SimpleString("sleep(random.uniform(7, 9))");	//delay 7~9 seconds randomly for first time page load
+	printf("Downloading info...\n");
 	PyRun_SimpleString("title = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/b').text");
 	PyRun_SimpleString("author = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/a[1]').text");
 	PyRun_SimpleString("summary = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/div').text");
@@ -47,6 +55,7 @@ int description () {
 	info = PyUnicode_AsUTF8(infoPy);												//info
 	PyObject *chapterlistPy = PyObject_GetAttrString(mainModule, "chapterlist");	//chapter-list
 
+	printf("Fanfiction info downloaded\nParsing chapters...\n");
 	//chapterlist parsing
 	j = 1;
 
@@ -65,8 +74,62 @@ int description () {
 		chapterlist = nextLine ? (nextLine+1) : NULL;
 	}
 	j = j - 1;
+	printf("Parsed chapters\n");
 }
 
+int writefile () {
+	printf("writing to file...\n");
+	int b = 1;
+	size_t l;
+	l = strlen(title) + strlen(author) + strlen(info) + strlen(summary) + 200; //+101+88+1(??)
+	
+	while (b <= j) {
+		l = l + strlen(chaptername[b]) + 2;
+		b = b + 1;
+	}
+	b = 1;
+	while (b <= j) {
+		l = l + strlen(chaptername[b]) + strlen(chapter[b]) + 12;
+		b = b + 1;
+	}
+	b = 1;
+	
+	char buf1[l];
+	char buf2[l];
+	sprintf(buf2, "%s\nBy %s\nDownloaded with ParanoidFFD, made with passion by Paranoid-Dev\n\n%s\n\n%s\n\n\nChapters\n\n",title,author,info,summary);
+	
+	while (b <= j) {
+		sprintf(buf1, "%s%s\n",buf2,chaptername[b]);
+		sprintf(buf2,buf1);
+		b = b + 1;
+	}
+	b = 1;
+	sprintf(buf1, "%s\n\n\n",buf2);
+	while (b <= j) {
+		sprintf(buf2, "%s| %s |\n\n",buf1,chaptername[b]);
+		sprintf(buf1, "%s%s\n\n",buf2,chapter[b]);
+		b = b + 1;
+	}
+	//printf("%s\n", buf1);
+
+	if (fname == 1) {	//using title as filename (default)
+		filename = title;
+	}
+	
+	if (f == 1) {	//write to txt
+		printf("saving to \"%s.txt\"\n",filename);
+	//	sprintf(buf2, "cat << '492e9a7f651399f7a025c22d12e73a55' > \"%s.txt\"\n%s\n492e9a7f651399f7a025c22d12e73a55",filename,buf1);	//delimiter : ParanoidFFD MD5 hash - if some fanfiction contains this hash (which is very unlikely), it will fail to write
+	//	system(buf2);
+		FILE *fp;
+		char output[strlen(filename)+5];
+		sprintf(output, "%s.txt",filename);
+		fp = fopen(output, "w+");
+		fprintf(fp, "%s",buf1);
+		fclose(fp);
+	}
+}
+
+/*
 int print () {
 	int a = 1;
 	int b = 1;
@@ -88,40 +151,92 @@ int print () {
 		a = a + 1;
 	}
 }
+*/
 
 int help () {
-	printf("                Paranoid FanFiction.net Downloader v1.0.1  by Paranoid-Dev                \n");
+	printf("                  Paranoid FanFiction Downloader v1.1.0  by Paranoid-Dev                  \n");
 	printf(" ________________________________________________________________________________________ \n");
 	printf("                                                                                          \n");
-	printf("Usage : ./ParanoidFFD <output file name(.txt)> <www.fanfiction.net url>                   \n");
+	printf("  Usage : ParanoidFFD <options>                                                           \n");
 	printf("                                                                                          \n");
-	printf("        echo <www.fanfiction.net url> | ./ParanoidFFD -p : print fanfiction in terminal   \n");	
-	printf("        ./ParanoidFFD --version : show ParanoidFFD version                                \n");
-	printf("        ./ParanoidFFD -h , --help : show this page                                        \n");
+	printf("  Options :                                                                               \n");
+	printf("    -u <fanfiction url> : download from <fanfiction url>                                  \n");
+	printf("    -f <FORMAT>         : save fanfiction as <FORMAT>                                     \n");
+	printf("                          currently supported format : txt                                \n");
+	printf("                          default : txt                                                   \n");
+	printf("    -o <FILE_NAME>      : saves fanfiction as <FILE_NAME>.<FORMAT>                        \n");
+	printf("                          default : fanfiction_title.<FORMAT>                             \n");
+	printf("    --version           : show ParanoidFFD version                                        \n");
+	printf("    -h , --help         : show this page                                                  \n");
+	printf(" ________________________________________________________________________________________ \n");
+	printf("                                                                                          \n");
 }
 
 int main (int argc, char *argv[]) {
-	if (argc > 1) {
+	int p = 1;
+	int down = 0;
+	int argvurl;
+	size_t l;
+	if (argc == 1) {
+		help ();
+	}
+	else {
+		while (p < argc) {
+			if (strcmp(argv[p], "--version") == 0) {
+				printf("Paranoid FanFiction.net Downloader v1.1.0 \n");
+			}
+			else if (strcmp(argv[p], "--help") == 0) {
+				help ();
+			}
+			else if (strcmp(argv[p], "-h") == 0) {
+				help ();
+			}
+			else if (strcmp(argv[p], "-f") == 0) {
+				p = p + 1;
+				if (strcmp(argv[p], "txt") == 0) {
+					f = 1;	//using format "txt"
+				}
+				else {
+					printf("invalid format : %s", argv[p]);
+					//printf("ctrl + c to quit\n");
+					//pause ();
+				}
+			}
+			else if (strcmp(argv[p], "-o") == 0) {
+				p = p + 1;
+				fname = 2;	//not using default filename
+				filename = argv[p];
+			}
+			else if (strcmp(argv[p], "-u") == 0) {
+				p = p + 1;
+				argvurl = p;
+				down = 1;
+				l = strlen(argv[p]) + 12;
+			}
+			else {
+				printf("invalid argument : %s \n", argv[p]);
+				//printf("ctrl + c to quit\n");
+				//pause ();
+			}
+			p = p + 1;
+		}
 		
-		if (strcmp(argv[1], "--version") == 0) {
-			printf("Paranoid FanFiction.net Downloader v1.0.1 \n");
-		}
-		else if (strcmp(argv[1], "--help") == 0) {
-			help ();
-		}
-		else if (strcmp(argv[1], "-h") == 0) {
-			help ();
-		}
-		else if (strcmp(argv[1], "-p") == 0) { //downloader
+		if (down == 1) {
+			printf("Downloading %s...\n",argv[argvurl]);
+			
+			char buf[l];
+			sprintf(buf, "yurl = \"%s\"",argv[argvurl]);
 			
 			Py_Initialize();
 			PyRun_SimpleString("import undetected_chromedriver as uc");
 			PyRun_SimpleString("import random");
 			PyRun_SimpleString("from time import sleep");
-			
+		
 			mainModule = PyImport_AddModule("__main__");
 			
-			PyRun_SimpleString("yurl = input()");
+			printf("Loaded undetected chromedriver\n");
+			
+			PyRun_SimpleString(buf);
 			PyRun_SimpleString("zurl = yurl.replace('https://', '')");
 			PyRun_SimpleString("furl = zurl.replace('http://', '')");
 			PyRun_SimpleString("durl = furl.replace('www.', '')");
@@ -129,46 +244,34 @@ int main (int argc, char *argv[]) {
 			PyRun_SimpleString("burl = '/'.join(aurl.split('/', 3)[:3])");
 			PyRun_SimpleString("i = 1");
 			PyRun_SimpleString("url = f\"https://www.{burl}/{i}\"");
-			
+		
+			printf("Parsed fanfiction url\nFetching fanfiction info...\n");
 			description ();
-			
+		
 			i = 0;
-			
+		
 			while (1) {
 				download ();
 				if (i == j) {
 					//	cleaning up before exiting
+					printf("Download finished\n");
 					PyRun_SimpleString("chrome.quit()");
 					Py_Finalize();
-					#ifdef _WIN64
-						system("del chromedriver.exe > nul 2> nul");
-					#elif __linux__
-						system("rm -f chromedriver");
+					//system("rm -f chromedriver");
+					#ifdef _WIN32	//for Windows
+						remove("chromedriver.exe");
 					#else
-						printf("unsupported OS\n");
+						remove("chromedriver");
 					#endif
-					print ();
+					printf("Cleaning up.. - removed chromedriver\n");
+					writefile ();
+					printf("Finished!\n");
 					break;
 				}
 				PyRun_SimpleString("i += 1");
 				PyRun_SimpleString("url = f\"https://www.{burl}/{i}\"");
 			}
 		}
-		else {
-			printf("saving %s to %s.txt\n",argv[2],argv[1]);
-			size_t l;
-			l = strlen(argv[1]) + strlen(argv[2]) + 43;
-			char buf[l];
-			#ifdef _WIN32
-				sprintf(buf, "echo \"%s\" | ParanoidFFD -p > \"%s.txt\"",argv[2],argv[1]);
-			#elif __linux__
-				sprintf(buf, "echo \"%s\" | ./ParanoidFFD -p > \"%s.txt\"",argv[2],argv[1]);
-			#else
-				printf("unsupported OS\n");
-			#endif
-			system(buf);
-		}
 	}
-
 	return 0;
 }

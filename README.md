@@ -1,5 +1,5 @@
 # ParanoidFFD
-Unblockable FanFiction.net Downloader
+Unblockable FanFiction Downloader
 
 I was using FanFicFare to download my fanfics, but recently it seems that Fanfiction.net is implementing cloudflare which blocks automated downloader scripts.
 
@@ -8,27 +8,21 @@ So I made my own "unblockable" downloader using [undetected_chromedriver](https:
 ## Installation (Linux)
 ### Dynamic
 ```
-pikaur -S google-chrome # just here to demonstrate you need the latest google-chrome / chromium
-pacman -S python3
+pikaur -S google-chrome-stable # just here to demonstrate you need the latest stable google-chrome / chromium
+pacman -S python3 # install Python3
 pip3 install undetected-chromedriver
-./dynamic-compile.sh
+gcc downloader-dynamic.c -o ParanoidFFD -I/usr/include/python3.9 -lpython3.9 # change python version to match your system
 ```
-**Note** Dynamic version requires the latest google-chrome / chromium install in the default location. If your system fails to meet this, use the portable version
+**Note** Dynamic version requires the latest google-chrome / chromium install in the default location. If your system fails to meet this, set options to make ParanoidFFD use your version of Chrome.
 ### Portable
-```
-pacman -S python3
-pip3 install undetected-chromedriver
-mkdir vendor
-cd vendor
-wget "https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2F827102%2Fchrome-linux.zip?generation=1605233458736188&alt=media" -O chrome-linux.zip
-python3 -m zipfile -e chrome-linux.zip ./
-chmod +x chrome-linux/chrome
-cd ..
-./portable-compile.sh
-```
+I decided that having over 300MB of portable chrome just wasn't that acceptable so I'm dropping support for it.
+
+I'll put in an option where you can select which version of google-chrome/chromium you have installed if you don't have the latest stable build.
 ## Installation (Windows)
-I haven't tried to compile this on Windows yet, but the code will work on Windows too.
+Installation for Windows is the same as for Linux - have Python 3.6 or higher installed, install undetected-chromedriver, and compile. (No compile scripts or pre-compiled binary yet, sorry - If you compiled a Windows version, please share your compile method and binary :) )
 
-Just make sure Python 3.6 or higher is installed, and `pip install undetected-chromedriver`
+I have some thoughts about using wsl, since it's a painless way to run ParanoidFFD.
+## Installation (Mac)
+I *think* installation for Mac OS will be same as Linux (same gcc command - just change python include path and version), but since I don't have a Mac device, I can't say for sure.
 
-Download static compiled chromium from [here](https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Win_x64%2F827102%2Fchrome-win.zip?generation=1605234361586654&alt=media) and rename the folder name to `chrome-win`.
+https://github.com/Paranoid-Dev/ParanoidFFD/issues/1
