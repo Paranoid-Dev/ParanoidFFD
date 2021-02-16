@@ -13,7 +13,7 @@ pacman -S python3 # install Python3
 pip3 install undetected-chromedriver
 gcc downloader-dynamic.c -o ParanoidFFD -I/usr/include/python3.9 -lpython3.9 # change python version to match your system
 ```
-**Note** Dynamic version requires the latest google-chrome / chromium install in the default location. If your system fails to meet this, set options to make ParanoidFFD use your version of Chrome.
+**Note** Dynamic version requires the latest stable google-chrome / chromium install in the default location. If your system fails to meet this, set options to make ParanoidFFD use your version of Chrome.
 ### Portable
 I decided that having over 300MB of portable chrome just wasn't that acceptable so I'm dropping support for it.
 
