@@ -260,7 +260,7 @@ int main (int argc, char *argv[]) {
 					printf("ParanoidFFD is up to date! ParanoidFFD v1.1.0.2 by Paranoid-Dev\n");
 				}
 				else {
-					printf("current version : ParanoidFFD 1.1.0.2\n\n");
+					printf("Current version : ParanoidFFD 1.1.0.2\nNew version : \n\n");
 					PyRun_SimpleString("chrome.get(nextver)");
 					PyRun_SimpleString("print(chrome.find_element_by_xpath('/html/body/pre').text)");
 				}
