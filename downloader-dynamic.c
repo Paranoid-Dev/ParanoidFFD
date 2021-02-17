@@ -157,17 +157,20 @@ int help () {
 	printf("                  Paranoid FanFiction Downloader v1.1.0  by Paranoid-Dev                  \n");
 	printf(" ________________________________________________________________________________________ \n");
 	printf("                                                                                          \n");
-	printf("  Usage : ParanoidFFD <options>                                                           \n");
+	printf(" Usage : ParanoidFFD <options>                                                            \n");
 	printf("                                                                                          \n");
-	printf("  Options :                                                                               \n");
-	printf("    -u <fanfiction url> : download from <fanfiction url>                                  \n");
-	printf("    -f <FORMAT>         : save fanfiction as <FORMAT>                                     \n");
-	printf("                          currently supported format : txt                                \n");
-	printf("                          default : txt                                                   \n");
-	printf("    -o <FILE_NAME>      : saves fanfiction as <FILE_NAME>.<FORMAT>                        \n");
-	printf("                          default : fanfiction_title.<FORMAT>                             \n");
-	printf("    --version           : show ParanoidFFD version                                        \n");
-	printf("    -h , --help         : show this page                                                  \n");
+	printf(" Options :                                                                                \n");
+	printf("   -u <fanfiction url> : download from <fanfiction url>                                   \n");
+	printf("   -f <FORMAT>         : save fanfiction as <FORMAT>                                      \n");
+	printf("                         currently supported format : txt                                 \n");
+	printf("                         default : txt                                                    \n");
+	printf("   -o <FILE_NAME>      : save fanfiction as <FILE_NAME>.<FORMAT>                          \n");
+	printf("                         default : fanfiction_title.<FORMAT>                              \n");
+	printf("   -C <Chrome Version> : set Chrome version as <Chrome Version>                           \n");
+	printf("                         use if you're not on the latest stable chrome build              \n");
+	printf("                         example : -C 86 : for chromium build 86.0.4240.75                \n");
+	printf("   --version           : show ParanoidFFD version                                         \n");
+	printf("   -h , --help         : show this page                                                   \n");
 	printf(" ________________________________________________________________________________________ \n");
 	printf("                                                                                          \n");
 }
@@ -175,8 +178,10 @@ int help () {
 int main (int argc, char *argv[]) {
 	int p = 1;
 	int down = 0;
+	int chromever = 0;
 	int argvurl;
 	size_t l;
+	char chromeversion[25];	//22+1+1+1
 	if (argc == 1) {
 		help ();
 	}
@@ -213,6 +218,11 @@ int main (int argc, char *argv[]) {
 				down = 1;
 				l = strlen(argv[p]) + 12;
 			}
+			else if (strcmp(argv[p], "-C") == 0) {
+				p = p + 1;
+				chromever = 1;
+				sprintf(chromeversion, "uc.TARGET_VERSION = %s",argv[p]);
+			}
 			else {
 				printf("invalid argument : %s \n", argv[p]);
 				//printf("ctrl + c to quit\n");
@@ -224,6 +234,12 @@ int main (int argc, char *argv[]) {
 		if (down == 1) {
 			printf("Downloading %s...\n",argv[argvurl]);
 			
+			#ifdef _WIN32	//for Windows
+				remove("chromedriver.exe");	//removing chromedriver if previous run crashed before deletion
+			#else
+				remove("chromedriver");
+			#endif
+			
 			char buf[l];
 			sprintf(buf, "yurl = \"%s\"",argv[argvurl]);
 			
@@ -231,7 +247,11 @@ int main (int argc, char *argv[]) {
 			PyRun_SimpleString("import undetected_chromedriver as uc");
 			PyRun_SimpleString("import random");
 			PyRun_SimpleString("from time import sleep");
-		
+			
+			if (chromever == 1) {
+				PyRun_SimpleString(chromeversion);
+			}
+			
 			mainModule = PyImport_AddModule("__main__");
 			
 			printf("Loaded undetected chromedriver\n");
