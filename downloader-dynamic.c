@@ -172,6 +172,7 @@ int help () {
 	printf("                         use if you're not on the latest stable Chrome build              \n");
 	printf("                         example : -C 86 : for Chromium 86.0.4240.75                      \n");
 	printf("   --version           : show ParanoidFFD version                                         \n");
+	printf("   --check-update      : check for new updates                                            \n");
 	printf("   -h , --help         : show this page                                                   \n");
 	printf("                                                                                          \n");
 	printf(" Examples :                                                                               \n");
@@ -233,6 +234,23 @@ int main (int argc, char *argv[]) {
 				p = p + 1;
 				chromever = 1;
 				sprintf(chromeversion, "uc.TARGET_VERSION = %s",argv[p]);
+			}
+			else if (strcmp(argv[p], "--check-update") == 0) {
+				Py_Initialize();
+				PyRun_SimpleString("import undetected_chromedriver as uc");
+				PyRun_SimpleString("options = uc.ChromeOptions()");
+				PyRun_SimpleString("options.headless = True");
+				PyRun_SimpleString("options.add_argument('--headless')");
+				PyRun_SimpleString("chrome = uc.Chrome(options=options)");
+				PyRun_SimpleString("chrome.get(url)");
+				PyRun_SimpleString("chrome.quit()");
+				Py_Finalize();
+				//system("rm -f chromedriver");
+				#ifdef _WIN32	//for Windows
+					remove("chromedriver.exe");
+				#else
+					remove("chromedriver");
+				#endif
 			}
 			else {
 				printf("invalid argument : %s \n", argv[p]);
