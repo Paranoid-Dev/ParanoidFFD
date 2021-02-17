@@ -12,5 +12,6 @@ rm "$2.tmp"
 echo NA > "$2-n"
 cp "$1" "$2"
 sed -i -e "s|https://github.com/Paranoid-Dev/ParanoidFFD||g" "$1"
+sed -i -e "s|Paranoid FanFiction Downloader v$1|Paranoid FanFiction Downloader v$2|g" "$2"
 nano $1
 nano $2
