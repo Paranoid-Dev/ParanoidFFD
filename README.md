@@ -39,9 +39,9 @@ Download fanfiction from `my/fan/fiction/url` and save it to a text file (defaul
 
 Download fanfiction from `my/fan/fiction/url` and save it to a text file with the filename as `my fanfiction save.txt`.
 
-`ParanoidFFD --check-update`
+`ParanoidFFD -C 86 --check-update`
 
-Check for new updates for ParanoidFFD
+Check for new updates for ParanoidFFD with Chrome 86 installed (Not latest stable build)
 
 `ParanoidFFD --help`, `ParanoidFFD -h`
 
