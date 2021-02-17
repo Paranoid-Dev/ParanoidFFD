@@ -242,7 +242,7 @@ int main (int argc, char *argv[]) {
 				PyRun_SimpleString("options.headless = True");
 				PyRun_SimpleString("options.add_argument('--headless')");
 				PyRun_SimpleString("chrome = uc.Chrome(options=options)");
-				PyRun_SimpleString("chrome.get(url)");
+				PyRun_SimpleString("chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.1.0-n')");
 				PyRun_SimpleString("chrome.quit()");
 				Py_Finalize();
 				//system("rm -f chromedriver");
