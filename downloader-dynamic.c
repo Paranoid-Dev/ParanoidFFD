@@ -154,12 +154,14 @@ int print () {
 */
 
 int help () {
+	printf(" ________________________________________________________________________________________ \n");
 	printf("                  Paranoid FanFiction Downloader v1.1.0  by Paranoid-Dev                  \n");
+	printf("                       https://github.com/Paranoid-Dev/ParanoidFFD                        \n");
 	printf(" ________________________________________________________________________________________ \n");
 	printf("                                                                                          \n");
-	printf(" Usage : ParanoidFFD <options>                                                            \n");
+	printf(" Usage    : ParanoidFFD <options>                                                         \n");
 	printf("                                                                                          \n");
-	printf(" Options :                                                                                \n");
+	printf(" Options  :                                                                               \n");
 	printf("   -u <fanfiction url> : download from <fanfiction url>                                   \n");
 	printf("   -f <FORMAT>         : save fanfiction as <FORMAT>                                      \n");
 	printf("                         currently supported format : txt                                 \n");
@@ -171,6 +173,10 @@ int help () {
 	printf("                         example : -C 86 : for Chromium 86.0.4240.75                      \n");
 	printf("   --version           : show ParanoidFFD version                                         \n");
 	printf("   -h , --help         : show this page                                                   \n");
+	printf("                                                                                          \n");
+	printf(" Examples :                                                                               \n");
+	printf("   ParanoidFFD -u \"my/fan/fiction/url\"                                                  \n");
+	printf("   ParanoidFFD -f txt -o \"my fanfiction save\" -u \"my/fan/fiction/url\"                 \n");
 	printf(" ________________________________________________________________________________________ \n");
 	printf("                                                                                          \n");
 }
@@ -183,12 +189,17 @@ int main (int argc, char *argv[]) {
 	size_t l;
 	char chromeversion[25];	//22+1+1+1
 	if (argc == 1) {
-		help ();
+		printf(" ________________________________________________________________________________________ \n");
+		printf("                  Paranoid FanFiction Downloader v1.1.0  by Paranoid-Dev                  \n");
+		printf("                       https://github.com/Paranoid-Dev/ParanoidFFD                        \n");
+		printf(" ________________________________________________________________________________________ \n");
+		printf(" \"ParanoidFFD --help\" to show help page                                                 \n");
+		printf("                                                                                          \n");
 	}
 	else {
 		while (p < argc) {
 			if (strcmp(argv[p], "--version") == 0) {
-				printf("Paranoid FanFiction.net Downloader v1.1.0 \n");
+				printf("ParanoidFFD 1.1.0\n");
 			}
 			else if (strcmp(argv[p], "--help") == 0) {
 				help ();

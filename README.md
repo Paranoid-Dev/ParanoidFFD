@@ -28,3 +28,12 @@ I have some thoughts about using wsl, since it's a painless way to run ParanoidF
 I *think* installation for Mac OS will be same as Linux (same gcc command - just change python include path and version), but since I don't have a Mac device, I can't say for sure.
 
 https://github.com/Paranoid-Dev/ParanoidFFD/issues/1
+## Usage
+`ParanoidFFD <options>`
+### Examples
+`ParanoidFFD -u "my/fan/fiction/url"`
+Download fanfiction from my/fan/fiction/url and saves it to a text file (default format) with the filename as the fanfiction title (default filename).
+`ParanoidFFD -f txt -o "my fanfiction save" -u "my/fan/fiction/url"`
+Download fanfiction from my/fan/fiction/url and saves it to a text file with the filename as `my fanfiction save.txt`.
+`ParanoidFFD --help`,`ParanoidFFD -h`
+Show help page
