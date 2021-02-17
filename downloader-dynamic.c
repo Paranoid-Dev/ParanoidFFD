@@ -167,8 +167,8 @@ int help () {
 	printf("   -o <FILE_NAME>      : save fanfiction as <FILE_NAME>.<FORMAT>                          \n");
 	printf("                         default : fanfiction_title.<FORMAT>                              \n");
 	printf("   -C <Chrome Version> : set Chrome version as <Chrome Version>                           \n");
-	printf("                         use if you're not on the latest stable chrome build              \n");
-	printf("                         example : -C 86 : for chromium build 86.0.4240.75                \n");
+	printf("                         use if you're not on the latest stable Chrome build              \n");
+	printf("                         example : -C 86 : for Chromium 86.0.4240.75                      \n");
 	printf("   --version           : show ParanoidFFD version                                         \n");
 	printf("   -h , --help         : show this page                                                   \n");
 	printf(" ________________________________________________________________________________________ \n");

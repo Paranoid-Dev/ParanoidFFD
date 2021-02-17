@@ -8,16 +8,18 @@ So I made my own "unblockable" downloader using [undetected_chromedriver](https:
 ## Installation (Linux)
 ### Dynamic
 ```
-pikaur -S google-chrome-stable # just here to demonstrate you need the latest stable google-chrome / chromium
-pacman -S python3 # install Python3
+git clone https://github.com/Paranoid-Dev/ParanoidFFD.git
+cd ParanoidFFD
+pikaur -S google-chrome-stable # for ArchLinux - use your pacakge manager for your OS
+pacman -S python3 # for ArchLinux - use your pacakge manager for your OS
 pip3 install undetected-chromedriver
-gcc downloader-dynamic.c -o ParanoidFFD -I/usr/include/python3.9 -lpython3.9 # change python version to match your system
+gcc downloader-dynamic.c -o ParanoidFFD -I/usr/include/python3.9 -lpython3.9 # change python version and include path to match your system
 ```
-**Note** Dynamic version requires the latest stable google-chrome / chromium install in the default location. If your system fails to meet this, set options to make ParanoidFFD use your version of Chrome.
+**Note** Dynamic version requires the latest stable Google-Chrome / Chromium install in the default location. If your system fails to meet this, use `-C <Chrome Version>` to make ParanoidFFD use your version of Chrome.
 ### Portable
-I decided that having over 300MB of portable chrome just wasn't that acceptable so I'm dropping support for it.
+I decided that having over 300MB of portable Chrome just wasn't that acceptable so I'm dropping support for it.
 
-I'll put in an option where you can select which version of google-chrome/chromium you have installed if you don't have the latest stable build.
+Use `-C <Chrome Version>` to use your version of Chrome.
 ## Installation (Windows)
 Installation for Windows is the same as for Linux - have Python 3.6 or higher installed, install undetected-chromedriver, and compile. (No compile scripts or pre-compiled binary yet, sorry - If you compiled a Windows version, please share your compile method and binary :) )
 
