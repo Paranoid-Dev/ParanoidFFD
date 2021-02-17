@@ -243,7 +243,7 @@ int main (int argc, char *argv[]) {
 				PyRun_SimpleString("options.headless = True");
 				PyRun_SimpleString("options.add_argument('--headless')");
 				PyRun_SimpleString("chrome = uc.Chrome(options=options)");
-				PyRun_SimpleString("chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.1.0-n')");
+				PyRun_SimpleString("chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.1.0.1-n')");
 				PyRun_SimpleString("nextver = chrome.find_element_by_xpath('/html/body/pre').text");
 				PyObject *nextverPy = PyObject_GetAttrString(mainModule, "nextver");
 				const char * nextver = PyUnicode_AsUTF8(nextverPy);
