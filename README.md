@@ -32,8 +32,13 @@ https://github.com/Paranoid-Dev/ParanoidFFD/issues/1
 `ParanoidFFD <options>`
 ### Examples
 `ParanoidFFD -u "my/fan/fiction/url"`
+
 Download fanfiction from my/fan/fiction/url and saves it to a text file (default format) with the filename as the fanfiction title (default filename).
+
 `ParanoidFFD -f txt -o "my fanfiction save" -u "my/fan/fiction/url"`
+
 Download fanfiction from my/fan/fiction/url and saves it to a text file with the filename as `my fanfiction save.txt`.
+
 `ParanoidFFD --help`,`ParanoidFFD -h`
+
 Show help page
