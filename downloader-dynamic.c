@@ -4,9 +4,9 @@
 #include <stdlib.h>
 //#include <unistd.h>
 
-char* chapter[2048];
+const char* chapter[2048];
 char* chaptername[2048];
-char *title, *author, *summary, *info, *filename;
+const char *title, *author, *summary, *info, *filename;
 PyObject *mainModule;
 int i, j;
 int f = 1;
