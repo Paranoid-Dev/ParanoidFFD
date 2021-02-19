@@ -242,11 +242,8 @@ int main (int argc, char *argv[]) {
 				sprintf(chromeversion, "uc.TARGET_VERSION = %s",argv[p]);
 			}
 			else if (strcmp(argv[p], "--check-update") == 0) {
-				#ifdef _WIN32	//for Windows
-					remove("chromedriver.exe");	//removing chromedriver if previous run crashed before deletion
-				#else
-					remove("chromedriver");
-				#endif
+				remove("chromedriver.exe");
+				remove("chromedriver");
 				Py_Initialize();
 				PyRun_SimpleString("import undetected_chromedriver as uc");
 				if (chromever == 1) {
@@ -271,12 +268,8 @@ int main (int argc, char *argv[]) {
 				}
 				PyRun_SimpleString("chrome.quit()");
 				Py_Finalize();
-				//system("rm -f chromedriver");
-				#ifdef _WIN32	//for Windows
-					remove("chromedriver.exe");
-				#else
-					remove("chromedriver");
-				#endif
+				remove("chromedriver.exe");
+				remove("chromedriver");
 			}
 			else {
 				printf("invalid argument : %s \n", argv[p]);
@@ -289,11 +282,8 @@ int main (int argc, char *argv[]) {
 		if (down == 1) {
 			printf("Downloading %s...\n",argv[argvurl]);
 			
-			#ifdef _WIN32	//for Windows
-				remove("chromedriver.exe");	//removing chromedriver if previous run crashed before deletion
-			#else
-				remove("chromedriver");
-			#endif
+			remove("chromedriver.exe");
+			remove("chromedriver");
 			
 			char buf[l];
 			sprintf(buf, "yurl = \"%s\"",argv[argvurl]);
@@ -333,11 +323,14 @@ int main (int argc, char *argv[]) {
 					PyRun_SimpleString("chrome.quit()");
 					Py_Finalize();
 					//system("rm -f chromedriver");
-					#ifdef _WIN32	//for Windows
-						remove("chromedriver.exe");
-					#else
-						remove("chromedriver");
-					#endif
+					//#ifdef _WIN32	//for Windows
+					//	remove("chromedriver.exe");
+					//#else
+					//	remove("chromedriver");
+					//#endif
+					//remove("chromedriver*");
+					remove("chromedriver.exe");
+					remove("chromedriver");
 					printf("Cleaning up.. - removed chromedriver\n");
 					writefile ();
 					printf("Finished!\n");

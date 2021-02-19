@@ -8,9 +8,9 @@ So I made my own "unblockable" downloader using [undetected_chromedriver](https:
 ### Dependency
 Latest stable build of Google Chrome / Chromium in the default install path (As of ParanoidFFD v1.1.0, you can use `-C <Chrome Version` to use other versions of Chrome)
 
-Python 3 (3.6 or higher)
+Python3 (3.6 or higher)
 
-[undetected_chromedriver](https://pypi.org/project/undetected-chromedriver/)
+[undetected-chromedriver](https://pypi.org/project/undetected-chromedriver/)
 ### Build dependency
 GCC and its' libraries or some other C compiler
 
@@ -22,9 +22,9 @@ Python3 dev package (with Python.h header)
 
 Download fanfiction from `my/fan/fiction/url` and save it to a text file (default format) with the filename as the fanfiction title (default filename).
 
-`ParanoidFFD -f txt -o "my fanfiction save" -u "my/fan/fiction/url"`
+`ParanoidFFD -f txt -o "my fanfiction save" -C 86 -u "my/fan/fiction/url"`
 
-Download fanfiction from `my/fan/fiction/url` and save it to a text file with the filename as `my fanfiction save.txt`.
+Download fanfiction from `my/fan/fiction/url` and save it to a text file with the filename as `my fanfiction save.txt` with Chrome 86 installed (Not latest stable build).
 
 `ParanoidFFD -C 86 --check-update`
 
@@ -72,6 +72,5 @@ https://stackoverflow.com/questions/59977457/installing-gcc-on-macos-catalina
 
 https://github.com/Paranoid-Dev/ParanoidFFD/issues/1
 ## Discord
-discord.gg/vuyt6HSSFb
-
+[discord.gg/vuyt6HSSFb](https://discord.gg/vuyt6HSSFb)
 Get the `Paranoid Programmer` role to join the (yet small) ParanoidFFD community
