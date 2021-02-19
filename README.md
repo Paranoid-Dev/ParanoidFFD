@@ -66,7 +66,7 @@ clang downloader-dynamic.c -o ParanoidFFD -I/usr/local/homebrew/Frameworks/Pytho
 ```
 Thanks to *minimaul#5512* on discord for providing instructions!
 
-###Old instructions (will be deleted soon)
+### Old instructions (will be deleted soon)
 I *think* installation for Mac OS will be same as Linux (same gcc command - just change python include path and version), but since I don't have a Mac device, I can't say for sure.
 
 Install GCC (see link below)
