@@ -28,6 +28,7 @@ int download () {
 	PyObject *chapterPy = PyObject_GetAttrString(mainModule, "chapter");
 	chapter[i] = PyUnicode_AsUTF8(chapterPy);
 	printf("Chapter %d downloaded\n",i);
+	return 0;
 }
 
 int description () {
@@ -75,6 +76,7 @@ int description () {
 	}
 	j = j - 1;
 	printf("Parsed chapters\n");
+	return 0;
 }
 
 int writefile () {
@@ -100,7 +102,7 @@ int writefile () {
 	
 	while (b <= j) {
 		sprintf(buf1, "%s%s\n",buf2,chaptername[b]);
-		sprintf(buf2,buf1);
+		sprintf(buf2, "%s",buf1);
 		b = b + 1;
 	}
 	b = 1;
@@ -127,6 +129,7 @@ int writefile () {
 		fprintf(fp, "%s",buf1);
 		fclose(fp);
 	}
+	return 0;
 }
 
 /*
@@ -150,6 +153,7 @@ int print () {
 		printf("%s\n\n", chapter[a]);
 		a = a + 1;
 	}
+	return 0;
 }
 */
 
@@ -181,6 +185,7 @@ int help () {
 	printf("   ParanoidFFD -C 86 --check-update                                                       \n");
 	printf(" ________________________________________________________________________________________ \n");
 	printf("                                                                                          \n");
+	return 0;
 }
 
 int main (int argc, char *argv[]) {
