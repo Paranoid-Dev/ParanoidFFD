@@ -54,8 +54,9 @@ Installation for Windows is the same as for Linux - have Python 3.6 or higher in
 
 I have some thoughts about using wsl, since it's a painless way to run ParanoidFFD.
 ## Installation (Mac)
+### For "*brew* installed Python" users
 ```
-brew install python3.9
+brew install python@3.9
 pip3 install undetected-chromedriver
 
 # for apple silicon
@@ -64,26 +65,12 @@ clang downloader-dynamic.c -o ParanoidFFD -I/opt/homebrew/Frameworks/Python.fram
 # for intel
 clang downloader-dynamic.c -o ParanoidFFD -I/usr/local/homebrew/Frameworks/Python.framework/Versions/3.9/include/python3.9 -L/usr/local/homebrew/Frameworks/Python.framework/Versions/3.9/lib -lpython3.9
 ```
-Thanks to *minimaul#5512* on discord for providing instructions!
+Thanks to *minimaul#5512* on discord for providing compile instructions and testing ParanoidFFD!
 
-### Old instructions (will be deleted soon)
-I *think* installation for Mac OS will be same as Linux (same gcc command - just change python include path and version), but since I don't have a Mac device, I can't say for sure.
-
-Install GCC (see link below)
-
-**(Below code are all untested)**
-
+### For "*non-brew* installed Python" users :
 `sudo find / -iname "Python.h"` : Find Python.h include path and Python version
 
-(change Python version and Python.h include path, and Python library path to match your system)
-
-`gcc downloader-dynamic.c -o ParanoidFFD -I/Library/Frameworks/Python.framework/Versions/3.9/include/python3.9 -L/Library/Frameworks/Python.framework/Versions/3.9/lib -lpython3.9` 
-
-See these links below for compilation help
-
-https://stackoverflow.com/questions/59977457/installing-gcc-on-macos-catalina
-
-https://github.com/Paranoid-Dev/ParanoidFFD/issues/1
+change Python version and Python.h include path, and Python library path to match your system and apply to above.
 ## Discord
 [discord.gg/vuyt6HSSFb](https://discord.gg/vuyt6HSSFb)
 Get the `Paranoid Programmer` role to join the (yet small) ParanoidFFD community
