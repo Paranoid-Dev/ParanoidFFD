@@ -54,6 +54,19 @@ Installation for Windows is the same as for Linux - have Python 3.6 or higher in
 
 I have some thoughts about using wsl, since it's a painless way to run ParanoidFFD.
 ## Installation (Mac)
+```
+brew install python3.9
+pip3 install undetected-chromedriver
+
+# for apple silicon
+clang downloader-dynamic.c -o ParanoidFFD -I/opt/homebrew/Frameworks/Python.framework/Versions/3.9/include/python3.9 -L/opt/homebrew/Frameworks/Python.framework/Versions/3.9/lib -lpython3.9
+
+# for intel
+clang downloader-dynamic.c -o ParanoidFFD -I/usr/local/homebrew/Frameworks/Python.framework/Versions/3.9/include/python3.9 -L/usr/local/homebrew/Frameworks/Python.framework/Versions/3.9/lib -lpython3.9
+```
+Thanks to *minimaul#5512* on discord for providing instructions!
+
+###Old instructions (will be deleted soon)
 I *think* installation for Mac OS will be same as Linux (same gcc command - just change python include path and version), but since I don't have a Mac device, I can't say for sure.
 
 Install GCC (see link below)
