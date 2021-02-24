@@ -87,7 +87,7 @@ int print () {
 
 int help () {
 	printf(" ________________________________________________________________________________________ \n");
-	printf("                 Paranoid FanFiction Downloader v1.2.0.1  by Paranoid-Dev                 \n");
+	printf("                 Paranoid FanFiction Downloader v1.2.0.2  by Paranoid-Dev                 \n");
 	printf("                       https://github.com/Paranoid-Dev/ParanoidFFD                        \n");
 	printf(" ________________________________________________________________________________________ \n");
 	printf("                                                                                          \n");
@@ -125,7 +125,7 @@ int main (int argc, char *argv[]) {
 	char chromeversion[25];	//22+1+1+1
 	if (argc == 1) {
 		printf(" ________________________________________________________________________________________ \n");
-		printf("                 Paranoid FanFiction Downloader v1.2.0.1  by Paranoid-Dev                 \n");
+		printf("                 Paranoid FanFiction Downloader v1.2.0.2  by Paranoid-Dev                 \n");
 		printf("                       https://github.com/Paranoid-Dev/ParanoidFFD                        \n");
 		printf(" ________________________________________________________________________________________ \n");
 		printf(" \"ParanoidFFD --help\" to show help page                                                 \n");
@@ -134,7 +134,7 @@ int main (int argc, char *argv[]) {
 	else {
 		while (p < argc) {
 			if (strcmp(argv[p], "--version") == 0) {
-				printf("ParanoidFFD 1.2.0.1\n");
+				printf("ParanoidFFD 1.2.0.2\n");
 			}
 			else if (strcmp(argv[p], "--help") == 0) {
 				help ();
@@ -151,7 +151,7 @@ int main (int argc, char *argv[]) {
 					f = 2;	//using format "epub"
 				}
 				else {
-					printf("invalid format : %s", argv[p]);
+					printf("invalid format : %s\n", argv[p]);
 					down = 0;
 					break;
 				}
@@ -185,15 +185,15 @@ int main (int argc, char *argv[]) {
 				PyRun_SimpleString("options.headless = True");
 				PyRun_SimpleString("options.add_argument('--headless')");
 				PyRun_SimpleString("chrome = uc.Chrome(options=options)");
-				PyRun_SimpleString("chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.2.0.1-n')");
+				PyRun_SimpleString("chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.2.0.2-n')");
 				PyRun_SimpleString("nextver = chrome.find_element_by_xpath('/html/body/pre').text");
 				PyObject *nextverPy = PyObject_GetAttrString(mainModule, "nextver");
 				const char * nextver = PyUnicode_AsUTF8(nextverPy);
 				if (strcmp(nextver, "NA") == 0) {
-					printf("ParanoidFFD is up to date! ParanoidFFD v1.2.0.1 by Paranoid-Dev\n");
+					printf("ParanoidFFD is up to date! ParanoidFFD v1.2.0.2 by Paranoid-Dev\n");
 				}
 				else {
-					printf("Current version : ParanoidFFD v1.2.0.1\nNew version : \n\n");
+					printf("Current version : ParanoidFFD v1.2.0.2\nNew version : \n\n");
 					PyRun_SimpleString("chrome.get(nextver)");
 					PyRun_SimpleString("print(chrome.find_element_by_xpath('/html/body/pre').text)");
 				}
@@ -451,9 +451,24 @@ int main (int argc, char *argv[]) {
 					PyRun_SimpleString("sleep(random.uniform(1, 2))");	//delay 1~2 seconds randomly
 					printf("Downloading chapter %d...\n",i);
 					PyRun_SimpleString("chapter = chrome.find_element_by_xpath('//*[@id=\"storytext\"]').get_attribute(\"innerHTML\")");
+					//Parsing html to make it work as xhtml, and removing embeded ads
 					PyRun_SimpleString("chapter = re.sub('<div.*?</div>','',chapter, flags=re.DOTALL)");
+					//should find more elegant solution
+					PyRun_SimpleString("chapter = re.sub('<p .*?>','<p>',chapter, flags=re.DOTALL)");
 					PyRun_SimpleString("chapter = re.sub('<hr.*?>','<hr />',chapter, flags=re.DOTALL)");
 					PyRun_SimpleString("chapter = re.sub('<br.*?>','<br />',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub('<area.*?>','',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub('<base.*?>','',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub('<col.*?>','',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub('<embed.*?>','',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub('<img.*?>','',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub('<input.*?>','',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub('<link.*?>','',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub('<meta.*?>','',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub('<param.*?>','',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub('<source.*?>','',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub('<track.*?>','',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub('<wbr.*?>','',chapter, flags=re.DOTALL)");
 					
 					PyObject *chapterPy = PyObject_GetAttrString(mainModule, "chapter");
 					chapter[i] = PyUnicode_AsUTF8(chapterPy);
