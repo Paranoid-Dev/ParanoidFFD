@@ -399,8 +399,8 @@ int main (int argc, char *argv[]) {
 						sprintf(tocxhtml, "zf.writestr(\"toc.xhtml\", \"\"\"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:epub=\"http://www.idpf.org/2007/ops\">\n<head>\n<title>toc.xhtml</title>\n<link href=\"template.css\" rel=\"stylesheet\" type=\"text/css\" />\n</head>\n\n<body>\n\n    <nav id=\"toc\" epub:type=\"toc\">\n        <h1 class=\"frontmatter\">Table of Contents</h1>\n        <ol class=\"contents\">\n            <li><a href=\"cover.xhtml\">%s</a></li>\n%s        </ol>\n\n    </nav>\n\n</body>\n\n</html>\"\"\")",title,toc_contents);
 						
 						//cover.xhtml
-						char cover[strlen(title)*j + strlen(author) + strlen(info) + strlen(summary) + 450];
-						sprintf(cover, "zf.writestr(\"cover.xhtml\", \"\"\"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:epub=\"http://www.idpf.org/2007/ops\">\n<head>\n<title>%s</title>\n<link href=\"template.css\" rel=\"stylesheet\" type=\"text/css\" />\n</head>\n\n<body>\n\n    <h1>%s</h1>\n    <h3>By %s</h3>\n    <br />\n    <p>Downloaded with ParanoidFFD, made with passion by Paranoid-Dev</p>\n    <br />\n    <p>%s</p>\n    <br />\n    <p>%s</p>\n\n</body>\n</html>\"\"\")",title,title,author,info,summary);
+						char cover[strlen(title)*j + strlen(author) + strlen(info) + strlen(summary) + 465];
+						sprintf(cover, "zf.writestr(\"cover.xhtml\", \"\"\"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:epub=\"http://www.idpf.org/2007/ops\">\n<head>\n<title>%s</title>\n<link href=\"template.css\" rel=\"stylesheet\" type=\"text/css\" />\n</head>\n\n<body>\n\n    <h1>%s</h1>\n    <h3>By %s</h3>\n    <p><small>Downloaded with ParanoidFFD, made with passion by Paranoid-Dev</small></p>\n    <br />\n    <p>%s</p>\n    <br />\n    <p>%s</p>\n\n</body>\n</html>\"\"\")",title,title,author,info,summary);
 						
 						//write metadata to epub zip
 						//PyRun_SimpleString("zf.writestr(\"content.opf\", \"\"\"content.opf file string\"\"\")");
