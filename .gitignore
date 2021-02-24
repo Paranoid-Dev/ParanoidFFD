@@ -2,5 +2,7 @@ vendor/
 etc/
 ParanoidFFD
 chromedriver
+downloader-dynamic-old.c
 *.txt
+*.epub
 *.html

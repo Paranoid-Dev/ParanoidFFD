@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ncx version="2005-1" xml:lang="en" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+
+<head>
+    <meta name="dtb:uid" content="www.fanfiction.net/s/12345678-ParanoidFFD"/>
+    <meta name="dtb:depth" content="1"/>
+</head>
+
+<docTitle>
+    <text></text>
+</docTitle>
+
+<navMap>
+	<navPoint id="cover" playOrder="1">
+        <navLabel><text>title(epub2)</text></navLabel>
+        <content src="cover.xhtml" />
+    </navPoint>
+    <navPoint id="chapter_1" playOrder="2">
+        <navLabel><text>1. Prologue (epub2)</text></navLabel>
+        <content src="chapter_1.xhtml" />
+    </navPoint>
+</navMap>
+
+</ncx>

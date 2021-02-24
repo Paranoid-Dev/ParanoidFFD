@@ -6,11 +6,15 @@ I was using FanFicFare to download my fanfics, but recently it seems that Fanfic
 So I made my own "unblockable" downloader using [undetected_chromedriver](https://github.com/ultrafunkamsterdam/undetected-chromedriver).
 
 ### Dependency
-Latest stable build of Google Chrome / Chromium in the default install path (As of ParanoidFFD v1.1.0, you can use `-C <Chrome Version` to use other versions of Chrome)
+Latest stable build of Google Chrome / Chromium in the default install path (As of ParanoidFFD v1.1.0, you can use `-C <Chrome Version>` to use other versions of Chrome)
 
 Python3 (3.6 or higher)
 
 [undetected-chromedriver](https://pypi.org/project/undetected-chromedriver/)
+
+Python Zlib module (Probably installed by default)
+
+You can delete every file/folder in this repo once you've compiled ParanoidFFD - ParanoidFFD doesn't require any files/folders in this repo to run.
 ### Build dependency
 GCC and its' libraries or some other C compiler
 
@@ -22,9 +26,9 @@ Python3 dev package (with Python.h header)
 
 Download fanfiction from `my/fan/fiction/url` and save it to a text file (default format) with the filename as the fanfiction title (default filename).
 
-`ParanoidFFD -f txt -o "my fanfiction save" -C 86 -u "my/fan/fiction/url"`
+`ParanoidFFD -f epub -o "my fanfiction save" -C 86 -u "my/fan/fiction/url"`
 
-Download fanfiction from `my/fan/fiction/url` and save it to a text file with the filename as `my fanfiction save.txt` with Chrome 86 installed (Not latest stable build).
+Download fanfiction from `my/fan/fiction/url` and save it to an epub file with the filename as `my fanfiction save.epub` with Chrome 86 installed (Not latest stable build).
 
 `ParanoidFFD -C 86 --check-update`
 
@@ -67,7 +71,7 @@ clang downloader-dynamic.c -o ParanoidFFD -I/usr/local/homebrew/Frameworks/Pytho
 ```
 Thanks to *minimaul#5512* on discord for providing compile instructions and testing ParanoidFFD!
 
-### For "*non-brew* installed Python" users :
+### For "*non-brew* installed Python" users
 `sudo find / -iname "Python.h"` : Find Python.h include path and Python version
 
 change Python version and Python.h include path, and Python library path to match your system and apply to above.

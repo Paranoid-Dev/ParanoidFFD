@@ -7,7 +7,7 @@ chrome = uc.Chrome(options=options)
 url = input()
 chrome.get(url)
 
-with open("./out.html", "w") as f:
+with open("./out.xhtml", "w") as f:
     try:
         f.write(chrome.find_element_by_xpath('//*[@id=\"storytext\"]').get_attribute("innerHTML"))
     except:

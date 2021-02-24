@@ -1,4 +1,4 @@
-Paranoid FanFiction Downloader v1.1.0.2  by Paranoid-Dev
+Paranoid FanFiction Downloader v1.2.0  by Paranoid-Dev
 
 | v1.1.0 |
 New file writing function
@@ -12,4 +12,7 @@ Added "check-update" feature
 | v1.1.0.2 |
 Support for multiple versions of Chrome for "check-update" feature
 
-Download at https://github.com/Paranoid-Dev/ParanoidFFD/tree/50529a91bad743029e0ed1d4d74501ab3a2c69b8
+| v1.2.0 |
+Support for Epub format (in beta testing)
+
+Download at https://github.com/Paranoid-Dev/ParanoidFFD
