@@ -87,7 +87,7 @@ int print () {
 
 int help () {
 	printf(" ________________________________________________________________________________________ \n");
-	printf("                 Paranoid FanFiction Downloader v1.2.0.2  by Paranoid-Dev                 \n");
+	printf("                 Paranoid FanFiction Downloader v1.2.0.3  by Paranoid-Dev                 \n");
 	printf("                       https://github.com/Paranoid-Dev/ParanoidFFD                        \n");
 	printf(" ________________________________________________________________________________________ \n");
 	printf("                                                                                          \n");
@@ -125,7 +125,7 @@ int main (int argc, char *argv[]) {
 	char chromeversion[25];	//22+1+1+1
 	if (argc == 1) {
 		printf(" ________________________________________________________________________________________ \n");
-		printf("                 Paranoid FanFiction Downloader v1.2.0.2  by Paranoid-Dev                 \n");
+		printf("                 Paranoid FanFiction Downloader v1.2.0.3  by Paranoid-Dev                 \n");
 		printf("                       https://github.com/Paranoid-Dev/ParanoidFFD                        \n");
 		printf(" ________________________________________________________________________________________ \n");
 		printf(" \"ParanoidFFD --help\" to show help page                                                 \n");
@@ -134,7 +134,7 @@ int main (int argc, char *argv[]) {
 	else {
 		while (p < argc) {
 			if (strcmp(argv[p], "--version") == 0) {
-				printf("ParanoidFFD 1.2.0.2\n");
+				printf("ParanoidFFD 1.2.0.3\n");
 			}
 			else if (strcmp(argv[p], "--help") == 0) {
 				help ();
@@ -185,15 +185,15 @@ int main (int argc, char *argv[]) {
 				PyRun_SimpleString("options.headless = True");
 				PyRun_SimpleString("options.add_argument('--headless')");
 				PyRun_SimpleString("chrome = uc.Chrome(options=options)");
-				PyRun_SimpleString("chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.2.0.2-n')");
+				PyRun_SimpleString("chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.2.0.3-n')");
 				PyRun_SimpleString("nextver = chrome.find_element_by_xpath('/html/body/pre').text");
 				PyObject *nextverPy = PyObject_GetAttrString(mainModule, "nextver");
 				const char * nextver = PyUnicode_AsUTF8(nextverPy);
 				if (strcmp(nextver, "NA") == 0) {
-					printf("ParanoidFFD is up to date! ParanoidFFD v1.2.0.2 by Paranoid-Dev\n");
+					printf("ParanoidFFD is up to date! ParanoidFFD v1.2.0.3 by Paranoid-Dev\n");
 				}
 				else {
-					printf("Current version : ParanoidFFD v1.2.0.2\nNew version : \n\n");
+					printf("Current version : ParanoidFFD v1.2.0.3\nNew version : \n\n");
 					PyRun_SimpleString("chrome.get(nextver)");
 					PyRun_SimpleString("print(chrome.find_element_by_xpath('/html/body/pre').text)");
 				}
@@ -381,7 +381,7 @@ int main (int argc, char *argv[]) {
 							b = b + 1;
 						}
 						
-						sprintf(tocncx, "zf.writestr(\"toc.ncx\", \"\"\"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<ncx version=\"2005-1\" xml:lang=\"en\" xmlns=\"http://www.daisy.org/z3986/2005/ncx/\">\n\n<head>\n    <meta name=\"dtb:uid\" content=\"%s-ParanoidFFD\"/>\n    <meta name=\"dtb:depth\" content=\"1\"/>\n</head>\n\n<docTitle>\n    <text></text>\n</docTitle>\n\n<navMap>\n    <navPoint id=\"cover\" playOrder=\"1\">\n        <navLabel><text>%s</text></navLabel>\n        <content src=\"cover.xhtml\" />\n    </navPoint>\n%s</navMap>\n\n</ncx>\"\"\")",argv[argvurl],title,tocncx_navmap);	//end line
+						sprintf(tocncx, "zf.writestr(\"toc.ncx\", \"\"\"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<ncx version=\"2005-1\" xml:lang=\"en\" xmlns=\"http://www.daisy.org/z3986/2005/ncx/\">\n\n<head>\n    <meta name=\"dtb:uid\" content=\"%s-ParanoidFFD\"/>\n    <meta name=\"dtb:depth\" content=\"1\"/>\n</head>\n\n<docTitle>\n    <text>toc</text>\n</docTitle>\n\n<navMap>\n    <navPoint id=\"cover\" playOrder=\"1\">\n        <navLabel><text>%s</text></navLabel>\n        <content src=\"cover.xhtml\" />\n    </navPoint>\n%s</navMap>\n\n</ncx>\"\"\")",argv[argvurl],title,tocncx_navmap);	//end line
 						
 						//toc.xhtml
 						char tocxhtml[strlen(title) + strlen(totalchapters) + 60*j + 510];
@@ -396,7 +396,7 @@ int main (int argc, char *argv[]) {
 							b = b + 1;
 						}
 						
-						sprintf(tocxhtml, "zf.writestr(\"toc.xhtml\", \"\"\"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:epub=\"http://www.idpf.org/2007/ops\">\n<head>\n<title>toc.xhtml</title>\n<link href=\"template.css\" rel=\"stylesheet\" type=\"text/css\" />\n</head>\n\n<body>\n\n    <nav id=\"toc\" epub:type=\"toc\">\n        <h1 class=\"frontmatter\">Table of Contents</h1>\n        <ol class=\"contents\">\n            <li><a href=\"cover.xhtml\">%s</a></li>\n%s        </ol>\n\n    </nav>\n\n</body>\n\n</html>\"\"\")",title,toc_contents);
+						sprintf(tocxhtml, "zf.writestr(\"toc.xhtml\", \"\"\"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:epub=\"http://www.idpf.org/2007/ops\">\n<head>\n<title>toc</title>\n<link href=\"template.css\" rel=\"stylesheet\" type=\"text/css\" />\n</head>\n\n<body>\n\n    <nav id=\"toc\" epub:type=\"toc\">\n        <h1 class=\"frontmatter\">Table of Contents</h1>\n        <ol class=\"contents\">\n            <li><a href=\"cover.xhtml\">%s</a></li>\n%s        </ol>\n\n    </nav>\n\n</body>\n\n</html>\"\"\")",title,toc_contents);
 						
 						//cover.xhtml
 						char cover[strlen(title)*j + strlen(author) + strlen(info) + strlen(summary) + 465];
@@ -454,7 +454,10 @@ int main (int argc, char *argv[]) {
 					//Parsing html to make it work as xhtml, and removing embeded ads
 					PyRun_SimpleString("chapter = re.sub('<div.*?</div>','',chapter, flags=re.DOTALL)");
 					//should find more elegant solution
-					PyRun_SimpleString("chapter = re.sub('<p .*?>','<p>',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub('<p align=\"center\".*?>','<p style=\"text-align:center;\">',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub('<p align=\"right\".*?>','<p style=\"text-align:right;\">',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub('<p align=\"left\".*?>','<p style=\"text-align:left;\">',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub('<p align=\"justify\".*?>','<p style=\"text-align:justify;\">',chapter, flags=re.DOTALL)");
 					PyRun_SimpleString("chapter = re.sub('<hr.*?>','<hr />',chapter, flags=re.DOTALL)");
 					PyRun_SimpleString("chapter = re.sub('<br.*?>','<br />',chapter, flags=re.DOTALL)");
 					PyRun_SimpleString("chapter = re.sub('<area.*?>','',chapter, flags=re.DOTALL)");
