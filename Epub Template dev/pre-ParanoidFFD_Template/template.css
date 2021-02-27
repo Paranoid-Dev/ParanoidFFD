@@ -1,0 +1,21 @@
+body {
+  background-color: #ffffff;
+  margin: 2%;
+  -epub-hyphens: none;
+  -webkit-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+  adobe-hyphenate: none;
+}
+
+h1 {
+  text-align: center;
+}
+
+h2 {
+  text-align: left;
+}
+p {
+  text-align: justify;
+  text-align-last: left;
+}

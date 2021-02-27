@@ -3,6 +3,7 @@ etc/
 ParanoidFFD
 chromedriver
 downloader-dynamic-old.c
+pre_ParanoidFFD_Template_epub_char
 *.txt
 *.epub
 *.html
