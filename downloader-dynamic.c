@@ -87,7 +87,7 @@ int print () {
 
 int help () {
 	printf(" ________________________________________________________________________________________ \n");
-	printf("                 Paranoid FanFiction Downloader v1.2.1.0  by Paranoid-Dev                 \n");
+	printf("                 Paranoid FanFiction Downloader v1.2.1.1  by Paranoid-Dev                 \n");
 	printf("                       https://github.com/Paranoid-Dev/ParanoidFFD                        \n");
 	printf(" ________________________________________________________________________________________ \n");
 	printf("                                                                                          \n");
@@ -125,7 +125,7 @@ int main (int argc, char *argv[]) {
 	char chromeversion[25];	//22+1+1+1
 	if (argc == 1) {
 		printf(" ________________________________________________________________________________________ \n");
-		printf("                 Paranoid FanFiction Downloader v1.2.1.0  by Paranoid-Dev                 \n");
+		printf("                 Paranoid FanFiction Downloader v1.2.1.1  by Paranoid-Dev                 \n");
 		printf("                       https://github.com/Paranoid-Dev/ParanoidFFD                        \n");
 		printf(" ________________________________________________________________________________________ \n");
 		printf(" \"ParanoidFFD --help\" to show help page                                                 \n");
@@ -134,7 +134,7 @@ int main (int argc, char *argv[]) {
 	else {
 		while (p < argc) {
 			if (strcmp(argv[p], "--version") == 0) {
-				printf("ParanoidFFD 1.2.1.0\n");
+				printf("ParanoidFFD 1.2.1.1\n");
 			}
 			else if (strcmp(argv[p], "--help") == 0) {
 				help ();
@@ -185,17 +185,18 @@ int main (int argc, char *argv[]) {
 				PyRun_SimpleString("options.headless = True");
 				PyRun_SimpleString("options.add_argument('--headless')");
 				PyRun_SimpleString("chrome = uc.Chrome(options=options)");
-				PyRun_SimpleString("chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.2.1.0-n')");
+				PyRun_SimpleString("chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.2.1.1-n')");
 				PyRun_SimpleString("nextver = chrome.find_element_by_xpath('/html/body/pre').text");
 				PyObject *nextverPy = PyObject_GetAttrString(mainModule, "nextver");
 				const char * nextver = PyUnicode_AsUTF8(nextverPy);
 				if (strcmp(nextver, "NA") == 0) {
-					printf("ParanoidFFD is up to date! ParanoidFFD v1.2.1.0 by Paranoid-Dev\n");
+					printf("ParanoidFFD is up to date! ParanoidFFD v1.2.1.1 by Paranoid-Dev\n");
 				}
 				else {
-					printf("Current version : ParanoidFFD v1.2.1.0\nNew version : \n\n");
+					printf("ParanoidFFD isn't up to date. Fetching updates info..\nNew version : \n\n");
 					PyRun_SimpleString("chrome.get(nextver)");
 					PyRun_SimpleString("print(chrome.find_element_by_xpath('/html/body/pre').text)");
+					printf("\nCurrent version : ParanoidFFD v1.2.1.1\n");
 				}
 				PyRun_SimpleString("chrome.quit()");
 				Py_Finalize();
@@ -454,24 +455,28 @@ int main (int argc, char *argv[]) {
 					//Parsing html to make it work as xhtml, and removing embeded ads
 					PyRun_SimpleString("chapter = re.sub(r'<div.*?</div>',r'',chapter, flags=re.DOTALL)");
 					//should find more elegant solution
-					PyRun_SimpleString("chapter = re.sub(r'<p[^>]*?center.*?>',r'<p style=\"text-align: center; text-align-last: center;\">',chapter, flags=re.DOTALL)");
-					PyRun_SimpleString("chapter = re.sub(r'<p[^>]*?right.*?>',r'<p style=\"text-align: right; text-align-last: right;\">',chapter, flags=re.DOTALL)");
-					PyRun_SimpleString("chapter = re.sub(r'<p[^>]*?left.*?>',r'<p style=\"text-align: left; text-align-last: left;\">',chapter, flags=re.DOTALL)");
-					PyRun_SimpleString("chapter = re.sub(r'<p[^>]*?justify.*?>',r'<p style=\"text-align: justify; text-align-last: justify;\">',chapter, flags=re.DOTALL)");
-					PyRun_SimpleString("chapter = re.sub(r'<hr.*?>',r'<hr />',chapter, flags=re.DOTALL)");
-					PyRun_SimpleString("chapter = re.sub(r'<br.*?>',r'<br />',chapter, flags=re.DOTALL)");
-					PyRun_SimpleString("chapter = re.sub(r'<area.*?>',r'',chapter, flags=re.DOTALL)");
-					PyRun_SimpleString("chapter = re.sub(r'<base.*?>',r'',chapter, flags=re.DOTALL)");
-					PyRun_SimpleString("chapter = re.sub(r'<col.*?>',r'',chapter, flags=re.DOTALL)");
-					PyRun_SimpleString("chapter = re.sub(r'<embed.*?>',r'',chapter, flags=re.DOTALL)");
-					PyRun_SimpleString("chapter = re.sub(r'<img.*?>',r'',chapter, flags=re.DOTALL)");
-					PyRun_SimpleString("chapter = re.sub(r'<input.*?>',r'',chapter, flags=re.DOTALL)");
-					PyRun_SimpleString("chapter = re.sub(r'<link.*?>',r'',chapter, flags=re.DOTALL)");
-					PyRun_SimpleString("chapter = re.sub(r'<meta.*?>',r'',chapter, flags=re.DOTALL)");
-					PyRun_SimpleString("chapter = re.sub(r'<param.*?>',r'',chapter, flags=re.DOTALL)");
-					PyRun_SimpleString("chapter = re.sub(r'<source.*?>',r'',chapter, flags=re.DOTALL)");
-					PyRun_SimpleString("chapter = re.sub(r'<track.*?>',r'',chapter, flags=re.DOTALL)");
-					PyRun_SimpleString("chapter = re.sub(r'<wbr.*?>',r'',chapter, flags=re.DOTALL)");
+		//			PyRun_SimpleString("chapter = re.sub(r'<p[^>]*?center.*?>',r'<p style=\"text-align: center; text-align-last: center;\">',chapter, flags=re.DOTALL)");
+		//			PyRun_SimpleString("chapter = re.sub(r'<p[^>]*?right.*?>',r'<p style=\"text-align: right; text-align-last: right;\">',chapter, flags=re.DOTALL)");
+		//			PyRun_SimpleString("chapter = re.sub(r'<p[^>]*?left.*?>',r'<p style=\"text-align: left; text-align-last: left;\">',chapter, flags=re.DOTALL)");
+		//			PyRun_SimpleString("chapter = re.sub(r'<p[^>]*?justify.*?>',r'<p style=\"text-align: justify; text-align-last: justify;\">',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub(r'<p[^>]*?(center|left|right|justify).*?>',r'<p style=\"text-align: \\1; text-align-last: \\1;\">',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub(r'<p (?![^>]*\\b(?:center|right|left|justify)\\b).*?>',r'<p>',chapter, flags=re.DOTALL)");
+		//			PyRun_SimpleString("chapter = re.sub(r'<hr.*?>',r'<hr />',chapter, flags=re.DOTALL)");
+		//			PyRun_SimpleString("chapter = re.sub(r'<br.*?>',r'<br />',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub(r'(<hr|<br).*?>',r'\\1 />',chapter, flags=re.DOTALL)");
+					PyRun_SimpleString("chapter = re.sub(r'(<area|<base|<col|<embed|<img|<input|<link|<meta|<param|<source|<track|<wbr).*?>',r'',chapter, flags=re.DOTALL)");
+		//			PyRun_SimpleString("chapter = re.sub(r'<area.*?>',r'',chapter, flags=re.DOTALL)");
+		//			PyRun_SimpleString("chapter = re.sub(r'<base.*?>',r'',chapter, flags=re.DOTALL)");
+		//			PyRun_SimpleString("chapter = re.sub(r'<col.*?>',r'',chapter, flags=re.DOTALL)");
+		//			PyRun_SimpleString("chapter = re.sub(r'<embed.*?>',r'',chapter, flags=re.DOTALL)");
+		//			PyRun_SimpleString("chapter = re.sub(r'<img.*?>',r'',chapter, flags=re.DOTALL)");
+		//			PyRun_SimpleString("chapter = re.sub(r'<input.*?>',r'',chapter, flags=re.DOTALL)");
+		//			PyRun_SimpleString("chapter = re.sub(r'<link.*?>',r'',chapter, flags=re.DOTALL)");
+		//			PyRun_SimpleString("chapter = re.sub(r'<meta.*?>',r'',chapter, flags=re.DOTALL)");
+		//			PyRun_SimpleString("chapter = re.sub(r'<param.*?>',r'',chapter, flags=re.DOTALL)");
+		//			PyRun_SimpleString("chapter = re.sub(r'<source.*?>',r'',chapter, flags=re.DOTALL)");
+		//			PyRun_SimpleString("chapter = re.sub(r'<track.*?>',r'',chapter, flags=re.DOTALL)");
+		//			PyRun_SimpleString("chapter = re.sub(r'<wbr.*?>',r'',chapter, flags=re.DOTALL)");
 					
 					PyObject *chapterPy = PyObject_GetAttrString(mainModule, "chapter");
 					chapter[i] = PyUnicode_AsUTF8(chapterPy);
