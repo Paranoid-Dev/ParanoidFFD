@@ -8,24 +8,32 @@ const char* chapter[2048];
 char* chaptername[2048];
 const char *title, *author, *summary, *info, *filename, *totalchapters;
 PyObject *mainModule;
+time_t updatedunixtimestamp;
+time_t publishedunixtimestamp;
 int i, j;
 int f = 1;
 int fname = 1;
+char updated[32];
+char published[32];
+char datetime[22];
+char mark[32];
 
-int description () {
+void description () {
 	PyRun_SimpleString("options = uc.ChromeOptions()");
 	PyRun_SimpleString("options.headless = True");
 	PyRun_SimpleString("options.add_argument('--headless')");
 	PyRun_SimpleString("chrome = uc.Chrome(options=options)");
 	PyRun_SimpleString("chrome.get(url)");
-	printf("Random delay before downloading to look unsuspicious\n");
-	PyRun_SimpleString("sleep(random.uniform(7, 9))");	//delay 7~9 seconds randomly for first time page load
+//	printf("Random delay before downloading to look unsuspicious\n");
+//	PyRun_SimpleString("sleep(random.uniform(7, 9))");	//delay 7~9 seconds randomly for first time page load
 	printf("Downloading info...\n");
 	PyRun_SimpleString("title = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/b').text");
 	PyRun_SimpleString("author = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/a[1]').text");
 	PyRun_SimpleString("summary = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/div').text");
 	PyRun_SimpleString("try: info = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/span[4]').text\nexcept: info = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/span[3]').text");
 	PyRun_SimpleString("try: chapterlist = chrome.find_element_by_xpath('//*[@id=\"chap_select\"]').text\nexcept: chapterlist = title");
+	PyRun_SimpleString("updated = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/span/span[1]').get_attribute(\"outerHTML\")");
+	PyRun_SimpleString("try: published = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/span/span[2]').get_attribute(\"outerHTML\")\nexcept: published = chrome.find_element_by_xpath('//*[@id=\"profile_top\"]/span/span[1]').get_attribute(\"outerHTML\")");
 	
 	PyObject *titlePy = PyObject_GetAttrString(mainModule, "title");
 	title = PyUnicode_AsUTF8(titlePy);												//title
@@ -33,6 +41,27 @@ int description () {
 	author = PyUnicode_AsUTF8(authorPy);											//author
 	PyObject *summaryPy = PyObject_GetAttrString(mainModule, "summary");
 	summary = PyUnicode_AsUTF8(summaryPy);											//summary
+	
+	PyRun_SimpleString("updated = re.sub(r'.*?\"(.*?)\".*',r'\\1',updated, flags=re.DOTALL)");
+	PyRun_SimpleString("published = re.sub(r'.*?\"(.*?)\".*',r'\\1',published, flags=re.DOTALL)");
+	
+	PyObject *updatedPy = PyObject_GetAttrString(mainModule, "updated");
+	updatedunixtimestamp = strtol(PyUnicode_AsUTF8(updatedPy), NULL, 10);	
+	struct tm *updatedtimestamp = gmtime(&updatedunixtimestamp);
+	strftime (updated, 32, "on %F, at %T", updatedtimestamp);
+	PyObject *publishedPy = PyObject_GetAttrString(mainModule, "published");
+	publishedunixtimestamp = strtol(PyUnicode_AsUTF8(publishedPy), NULL, 10);	
+	struct tm *publishedtimestamp = gmtime(&publishedunixtimestamp);
+	strftime (published, 32, "on %F, at %T", publishedtimestamp);
+	
+	
+	
+	
+//	PyRun_SimpleString("lang = info");	//regex this for language
+	PyRun_SimpleString("info = re.sub(r'(Reviews|Favs|Follows|Published|Updated).*?- ',r'',info, flags=re.DOTALL)");
+	PyRun_SimpleString("info = re.sub(r'- ',r'\\n',info, flags=re.DOTALL)");
+	PyRun_SimpleString("info = re.sub(r'Rated: ',r'',info, flags=re.DOTALL)");
+	PyRun_SimpleString("info = re.sub(r'id:.*$',r'',info, flags=re.DOTALL)");
 	PyObject *infoPy = PyObject_GetAttrString(mainModule, "info");
 	info = PyUnicode_AsUTF8(infoPy);												//info
 	PyObject *chapterlistPy = PyObject_GetAttrString(mainModule, "chapterlist");	//chapter-list
@@ -57,37 +86,11 @@ int description () {
 	}
 	j = j - 1;
 	printf("Parsed chapters\n");
-	return 0;
 }
 
-/*
-int print () {
-	int a = 1;
-	int b = 1;
-	printf("%s\n", title);
-	printf("By %s\n", author);
-	printf("Downloaded with ParanoidFFD, made with passion by Paranoid-Dev\n\n");
-	printf("%s\n\n", info);
-	printf("%s\n\n\n", summary);
-	printf("Chapters\n\n");
-
-	while (b <= j) {
-		printf("%s\n", chaptername[b]);
-		b = b + 1;
-	}
-	printf("\n\n\n");
-	while (a <= j) {
-		printf("| %s |\n\n", chaptername[a]);
-		printf("%s\n\n", chapter[a]);
-		a = a + 1;
-	}
-	return 0;
-}
-*/
-
-int help () {
+void help () {
 	printf(" ________________________________________________________________________________________ \n");
-	printf("                 Paranoid FanFiction Downloader v1.2.1.1  by Paranoid-Dev                 \n");
+	printf("                 Paranoid FanFiction Downloader v1.2.1.2  by Paranoid-Dev                 \n");
 	printf("                       https://github.com/Paranoid-Dev/ParanoidFFD                        \n");
 	printf(" ________________________________________________________________________________________ \n");
 	printf("                                                                                          \n");
@@ -113,7 +116,6 @@ int help () {
 	printf("   ParanoidFFD -C 86 --check-update                                                       \n");
 	printf(" ________________________________________________________________________________________ \n");
 	printf("                                                                                          \n");
-	return 0;
 }
 
 int main (int argc, char *argv[]) {
@@ -122,10 +124,10 @@ int main (int argc, char *argv[]) {
 	int chromever = 0;
 	int argvurl;
 	size_t l;
-	char chromeversion[25];	//22+1+1+1
+	char chromeversion[25];
 	if (argc == 1) {
 		printf(" ________________________________________________________________________________________ \n");
-		printf("                 Paranoid FanFiction Downloader v1.2.1.1  by Paranoid-Dev                 \n");
+		printf("                 Paranoid FanFiction Downloader v1.2.1.2  by Paranoid-Dev                 \n");
 		printf("                       https://github.com/Paranoid-Dev/ParanoidFFD                        \n");
 		printf(" ________________________________________________________________________________________ \n");
 		printf(" \"ParanoidFFD --help\" to show help page                                                 \n");
@@ -134,7 +136,7 @@ int main (int argc, char *argv[]) {
 	else {
 		while (p < argc) {
 			if (strcmp(argv[p], "--version") == 0) {
-				printf("ParanoidFFD 1.2.1.1\n");
+				printf("ParanoidFFD 1.2.1.2\n");
 			}
 			else if (strcmp(argv[p], "--help") == 0) {
 				help ();
@@ -185,18 +187,18 @@ int main (int argc, char *argv[]) {
 				PyRun_SimpleString("options.headless = True");
 				PyRun_SimpleString("options.add_argument('--headless')");
 				PyRun_SimpleString("chrome = uc.Chrome(options=options)");
-				PyRun_SimpleString("chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.2.1.1-n')");
+				PyRun_SimpleString("chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.2.1.2-n')");
 				PyRun_SimpleString("nextver = chrome.find_element_by_xpath('/html/body/pre').text");
 				PyObject *nextverPy = PyObject_GetAttrString(mainModule, "nextver");
 				const char * nextver = PyUnicode_AsUTF8(nextverPy);
 				if (strcmp(nextver, "NA") == 0) {
-					printf("ParanoidFFD is up to date! ParanoidFFD v1.2.1.1 by Paranoid-Dev\n");
+					printf("ParanoidFFD is up to date! ParanoidFFD v1.2.1.2 by Paranoid-Dev\n");
 				}
 				else {
 					printf("ParanoidFFD isn't up to date. Fetching updates info..\nNew version : \n\n");
 					PyRun_SimpleString("chrome.get(nextver)");
 					PyRun_SimpleString("print(chrome.find_element_by_xpath('/html/body/pre').text)");
-					printf("\nCurrent version : ParanoidFFD v1.2.1.1\n");
+					printf("\nCurrent version : ParanoidFFD v1.2.1.2\n");
 				}
 				PyRun_SimpleString("chrome.quit()");
 				Py_Finalize();
@@ -243,10 +245,17 @@ int main (int argc, char *argv[]) {
 			PyRun_SimpleString("burl = '/'.join(aurl.split('/', 3)[:3])");
 			PyRun_SimpleString("i = 1");
 			PyRun_SimpleString("url = f\"https://www.{burl}/{i}\"");
-		
+			
+			time_t now;	//getting date-time
+			time(&now);
+			struct tm* now_tm;
+			now_tm = gmtime(&now);
+			strftime (datetime, 22, "%FT%TZ", now_tm);
+			strftime (mark, 32, "on %F, at %T", now_tm);
+			
 			printf("Parsed fanfiction url\nFetching fanfiction info...\n");
 			description ();
-		
+			
 			i = 0;
 			if (fname == 1) {	//using title as filename (default)
 				filename = title;
@@ -265,7 +274,7 @@ int main (int argc, char *argv[]) {
 						printf("writing to file...\n");
 						int b = 1;
 						size_t m;
-						m = strlen(title) + strlen(author) + strlen(info) + strlen(summary) + 200; //+101+88+1(??)
+						m = strlen(title) + strlen(author) + strlen(info) + strlen(summary) + strlen(mark) + 215;
 						
 						while (b <= j) {
 							m = m + strlen(chaptername[b]) + 2;
@@ -280,7 +289,7 @@ int main (int argc, char *argv[]) {
 						
 						char buf1[m];
 						char buf2[m];
-						sprintf(buf2, "%s\nBy %s\nDownloaded with ParanoidFFD, made with passion by Paranoid-Dev\n\n%s\n\n%s\n\n\nChapters\n\n",title,author,info,summary);
+						sprintf(buf2, "%s\nBy %s\n\n%sPublished %s\nUpdated %s\nDownloaded with ParanoidFFD, %s\n\n%s\n\n\nChapters\n\n",title,author,info,published,updated,mark,summary);
 						
 						while (b <= j) {
 							sprintf(buf1, "%s%s\n",buf2,chaptername[b]);
@@ -308,7 +317,6 @@ int main (int argc, char *argv[]) {
 					//download chapters
 					i = i + 1;
 					printf("Fetching chapter %d...\n",i);
-					//	chrome initialzation unneeded?
 					PyRun_SimpleString("options = uc.ChromeOptions()");
 					PyRun_SimpleString("options.headless = True");
 					PyRun_SimpleString("options.add_argument('--headless')");
@@ -360,12 +368,7 @@ int main (int argc, char *argv[]) {
 							sprintf(contentopf_spine_chapters, "%s    <itemref idref=\"chapter_%d\" />\n",bufepub2,b);
 							b = b + 1;
 						}
-						time_t now;	//getting date-time
-						time(&now);
-						struct tm* now_tm;
-						now_tm = localtime(&now);
-						char datetime[22];
-						strftime (datetime, 22, "%FT%TZ", now_tm);
+						
 						
 						sprintf(contentopf, "zf.writestr(\"content.opf\", \"\"\"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<package xmlns=\"http://www.idpf.org/2007/opf\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" unique-identifier=\"db-id\" version=\"3.0\">\n\n<metadata>\n    <dc:title id=\"t1\">%s</dc:title>\n    <dc:identifier id=\"db-id\">%s-ParanoidFFD</dc:identifier>\n    <meta property=\"dcterms:modified\">%s</meta>\n    <dc:language>en</dc:language>\n</metadata>\n\n<manifest>\n    <item id=\"toc\" properties=\"nav\" href=\"toc.xhtml\" media-type=\"application/xhtml+xml\" />\n    <item id=\"ncx\" href=\"toc.ncx\" media-type=\"application/x-dtbncx+xml\" />\n    <item id=\"template_css\" href=\"template.css\" media-type=\"text/css\" />\n    <item id=\"cover\" href=\"cover.xhtml\" media-type=\"application/xhtml+xml\" />\n%s</manifest>\n\n<spine toc=\"ncx\">\n    <itemref idref=\"cover\" />\n%s</spine>\n\n</package>\"\"\")",title,argv[argvurl],datetime,contentopf_manifest_chapters,contentopf_spine_chapters);	//end line
 						
@@ -400,8 +403,9 @@ int main (int argc, char *argv[]) {
 						sprintf(tocxhtml, "zf.writestr(\"toc.xhtml\", \"\"\"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:epub=\"http://www.idpf.org/2007/ops\">\n<head>\n<title>toc</title>\n<link href=\"template.css\" rel=\"stylesheet\" type=\"text/css\" />\n</head>\n\n<body>\n\n    <nav id=\"toc\" epub:type=\"toc\">\n        <h1 class=\"frontmatter\">Table of Contents</h1>\n        <ol class=\"contents\">\n            <li><a href=\"cover.xhtml\">%s</a></li>\n%s        </ol>\n\n    </nav>\n\n</body>\n\n</html>\"\"\")",title,toc_contents);
 						
 						//cover.xhtml
-						char cover[strlen(title)*j + strlen(author) + strlen(info) + strlen(summary) + 465];
-						sprintf(cover, "zf.writestr(\"cover.xhtml\", \"\"\"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:epub=\"http://www.idpf.org/2007/ops\">\n<head>\n<title>%s</title>\n<link href=\"template.css\" rel=\"stylesheet\" type=\"text/css\" />\n</head>\n\n<body>\n\n    <h1>%s</h1>\n    <h3>By %s</h3>\n    <p><small>Downloaded with ParanoidFFD, made with passion by Paranoid-Dev</small></p>\n    <br />\n    <p>%s</p>\n    <br />\n    <p>%s</p>\n\n</body>\n</html>\"\"\")",title,title,author,info,summary);
+						
+						char cover[strlen(title)*j + strlen(author) + strlen(info) + strlen(summary) + strlen(argv[argvurl]) + 590];
+						sprintf(cover, "zf.writestr(\"cover.xhtml\", \"\"\"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:epub=\"http://www.idpf.org/2007/ops\">\n<head>\n<title>%s</title>\n<link href=\"template.css\" rel=\"stylesheet\" type=\"text/css\" />\n</head>\n\n<body>\n\n    <h1><a href=\"%s\">%s</a></h1>\n    <h3>By %s</h3>\n    <br />\n    <pre>%sPublished %s\nUpdated %s\nDownloaded with <a href=\"https://github.com/Paranoid-Dev/ParanoidFFD\">ParanoidFFD</a>, %s</pre>\n    <br />\n    <p>%s</p>\n\n</body>\n</html>\"\"\")",title,argv[argvurl],title,author,info,published,updated,mark,summary);
 						
 						//write metadata to epub zip
 						//PyRun_SimpleString("zf.writestr(\"content.opf\", \"\"\"content.opf file string\"\"\")");
@@ -454,29 +458,10 @@ int main (int argc, char *argv[]) {
 					PyRun_SimpleString("chapter = chrome.find_element_by_xpath('//*[@id=\"storytext\"]').get_attribute(\"innerHTML\")");
 					//Parsing html to make it work as xhtml, and removing embeded ads
 					PyRun_SimpleString("chapter = re.sub(r'<div.*?</div>',r'',chapter, flags=re.DOTALL)");
-					//should find more elegant solution
-		//			PyRun_SimpleString("chapter = re.sub(r'<p[^>]*?center.*?>',r'<p style=\"text-align: center; text-align-last: center;\">',chapter, flags=re.DOTALL)");
-		//			PyRun_SimpleString("chapter = re.sub(r'<p[^>]*?right.*?>',r'<p style=\"text-align: right; text-align-last: right;\">',chapter, flags=re.DOTALL)");
-		//			PyRun_SimpleString("chapter = re.sub(r'<p[^>]*?left.*?>',r'<p style=\"text-align: left; text-align-last: left;\">',chapter, flags=re.DOTALL)");
-		//			PyRun_SimpleString("chapter = re.sub(r'<p[^>]*?justify.*?>',r'<p style=\"text-align: justify; text-align-last: justify;\">',chapter, flags=re.DOTALL)");
 					PyRun_SimpleString("chapter = re.sub(r'<p[^>]*?(center|left|right|justify).*?>',r'<p style=\"text-align: \\1; text-align-last: \\1;\">',chapter, flags=re.DOTALL)");
 					PyRun_SimpleString("chapter = re.sub(r'<p (?![^>]*\\b(?:center|right|left|justify)\\b).*?>',r'<p>',chapter, flags=re.DOTALL)");
-		//			PyRun_SimpleString("chapter = re.sub(r'<hr.*?>',r'<hr />',chapter, flags=re.DOTALL)");
-		//			PyRun_SimpleString("chapter = re.sub(r'<br.*?>',r'<br />',chapter, flags=re.DOTALL)");
 					PyRun_SimpleString("chapter = re.sub(r'(<hr|<br).*?>',r'\\1 />',chapter, flags=re.DOTALL)");
 					PyRun_SimpleString("chapter = re.sub(r'(<area|<base|<col|<embed|<img|<input|<link|<meta|<param|<source|<track|<wbr).*?>',r'',chapter, flags=re.DOTALL)");
-		//			PyRun_SimpleString("chapter = re.sub(r'<area.*?>',r'',chapter, flags=re.DOTALL)");
-		//			PyRun_SimpleString("chapter = re.sub(r'<base.*?>',r'',chapter, flags=re.DOTALL)");
-		//			PyRun_SimpleString("chapter = re.sub(r'<col.*?>',r'',chapter, flags=re.DOTALL)");
-		//			PyRun_SimpleString("chapter = re.sub(r'<embed.*?>',r'',chapter, flags=re.DOTALL)");
-		//			PyRun_SimpleString("chapter = re.sub(r'<img.*?>',r'',chapter, flags=re.DOTALL)");
-		//			PyRun_SimpleString("chapter = re.sub(r'<input.*?>',r'',chapter, flags=re.DOTALL)");
-		//			PyRun_SimpleString("chapter = re.sub(r'<link.*?>',r'',chapter, flags=re.DOTALL)");
-		//			PyRun_SimpleString("chapter = re.sub(r'<meta.*?>',r'',chapter, flags=re.DOTALL)");
-		//			PyRun_SimpleString("chapter = re.sub(r'<param.*?>',r'',chapter, flags=re.DOTALL)");
-		//			PyRun_SimpleString("chapter = re.sub(r'<source.*?>',r'',chapter, flags=re.DOTALL)");
-		//			PyRun_SimpleString("chapter = re.sub(r'<track.*?>',r'',chapter, flags=re.DOTALL)");
-		//			PyRun_SimpleString("chapter = re.sub(r'<wbr.*?>',r'',chapter, flags=re.DOTALL)");
 					
 					PyObject *chapterPy = PyObject_GetAttrString(mainModule, "chapter");
 					chapter[i] = PyUnicode_AsUTF8(chapterPy);
