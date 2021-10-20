@@ -6,7 +6,7 @@ I was using FanFicFare to download my fanfics, but Fanfiction.net implemented cl
 So I made my own "undetectable" downloader, ParanoidFFD.
 
 ### Dependency
-Chromium appimage and chromedriver for ParanoidFFD in the same directory as ParanoidFFD (Linux only) (recommended) _**or**_ chromedriver in the same directory as ParanoidFFD and install of Google Chrome / Chromium in the default install path
+[Chromium appimage and chromedriver for ParanoidFFD](https://github.com/Paranoid-Dev/ParanoidFFD/releases/download/v1.3.0.0/ParanoidFFD_chrome.zip) in the same directory as ParanoidFFD (Linux only) (recommended) _**or**_  [chromedriver](https://chromedriver.chromium.org/downloads) in the same directory as ParanoidFFD and install of Google Chrome / Chromium in the default install path
 
 Python3 (3.6 or higher)
 
@@ -68,7 +68,8 @@ Installation for Windows should be the same as for Linux, except you have to use
 And in *parallel-downloader.c*, you have to change *./chromedriver* to *.\chromedriver.exe* (I'll fix this in the next update)
 
 I'm working on building a single exe file, but for now, you'll have to compile it yourselves. 
-## Installation (Mac)
+## Installation (MacOS)
+Installation for MacOS should be the same as for Linux, except you have to use system installed Google Chrome / Chromium and download Chromedriver yourself.
 ### For "*brew* installed Python" users
 ```
 brew install python@3.9
