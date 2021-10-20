@@ -1,4 +1,4 @@
-Paranoid FanFiction Downloader v1.2.1.1  by Paranoid-Dev
+Paranoid FanFiction Downloader v1.3.0.0  by Paranoid-Dev
 
 | v1.1.0 |
 New file writing function
@@ -30,4 +30,10 @@ Support for iBooks, bug fixes for text align, updates for CSS
 | v1.2.1.1 |
 Bug fix for few <p> tag exceptions, edited '--check-update' dialog
 
-Download at https://github.com/Paranoid-Dev/ParanoidFFD/tree/bc1aedfec716f9272547b82e5fad3459f3dc9508
+| v1.2.1.2 |
+Bug fix for timestamps, updated cover
+
+| v1.3.0.0 |
+Support for parallel downloading, download retries when errors occur, added markdown style for text output, added custom chromium appimage and chromedriver support, some bug fixes
+
+Download at https://github.com/Paranoid-Dev/ParanoidFFD

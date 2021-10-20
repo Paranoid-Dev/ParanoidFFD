@@ -10,3 +10,5 @@ pre_ParanoidFFD_Template_epub_char
 *.html
 *.jpg
 *.jpeg
+.ParanoidFFD.ungoogled-chromium_91.0.4472.164-1.1.AppImage
+.ParanoidFFD.chromedriver_v91

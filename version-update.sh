@@ -3,7 +3,7 @@
 if [ "$#" -eq 2 ]
 then
   echo updating from version $1 to version $2 ...
-  sed -i -e "s/$1/$2/g" downloader-dynamic.c
+  sed -i -e "s/$1/$2/g" parallel-downloader.c
   
   cd "updates history"
   echo "https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/$2" > "$2.tmp"

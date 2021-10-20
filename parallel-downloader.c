@@ -1,3 +1,19 @@
+/*
+   Copyright 2021 Paranoid-Dev
+   
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+   
+       http://www.apache.org/licenses/LICENSE-2.0
+   
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 #include <Python.h>	//	>= Python3.6
 #include <stdio.h>
 #include <string.h>
@@ -20,11 +36,12 @@ int argvurl;
 size_t l;	//buffer size
 int j = 1;	//total chapters
 int errnum = 0;
+int t = 3;	//threads
 
 void help () {
 	puts(
 		" ________________________________________________________________________________________ \n"
-		"                 Paranoid FanFiction Downloader v1.2.1.2  by Paranoid-Dev                 \n"
+		"                 Paranoid FanFiction Downloader v1.3.0.0  by Paranoid-Dev                 \n"
 		"                       https://github.com/Paranoid-Dev/ParanoidFFD                        \n"
 		" ________________________________________________________________________________________ \n"
 		"                                                                                          \n"
@@ -37,13 +54,15 @@ void help () {
 		"                         default : txt                                                    \n"
 		"   -o <FILE_NAME>      : save fanfiction as <FILE_NAME>.<FORMAT>                          \n"
 		"                         default : fanfiction_title.<FORMAT>                              \n"
+		"   -t <n>              : numder of parallel download threads, use a positive integer      \n"
+		"                         default : 3                                                      \n"
 		"   --version           : show ParanoidFFD version                                         \n"
 		"   --check-update      : check for new updates                                            \n"
 		"   -h , --help         : show this page                                                   \n"
 		"                                                                                          \n"
 		" Examples :                                                                               \n"
 		"   ParanoidFFD -u \"my/fan/fiction/url\"                                                    \n"
-		"   ParanoidFFD -f epub -o \"my fanfiction save\" -u \"my/fan/fiction/url\"                    \n"
+		"   ParanoidFFD -f epub -t 4 -o \"my fanfiction save\" -u \"my/fan/fiction/url\"               \n"
 		"   ParanoidFFD --check-update                                                             \n"
 		" ________________________________________________________________________________________ \n"
 	);
@@ -69,7 +88,6 @@ int initializePy () {
 		
 		"			FLAG_ParanoidFFD_CHROMEID = f\"--ParanoidFFD_CHROMEID={random.randint(100000, 999999)}\" \n"
 		"			options = webdriver.ChromeOptions() \n"
-		"			options.binary_location = './.ParanoidFFD.ungoogled-chromium_91.0.4472.164-1.1.AppImage' \n"
 		"			options.add_argument('start-maximized') \n"
 		"			options.add_argument(FLAG_ParanoidFFD_CHROMEID) \n"
 		"			options.add_experimental_option('excludeSwitches', ['enable-automation']) \n"
@@ -77,8 +95,12 @@ int initializePy () {
 		"			options.headless=True \n"
 		"			options.add_argument('--headless') \n"
 		
-		"			chrome = webdriver.Chrome(options=options, executable_path='./.ParanoidFFD.chromedriver_v91') \n"	//for ungoogled-chromium
-//		"			chrome = webdriver.Chrome(options=options, executable_path='./chromedriver') \n"					//for system Chrome
+		"			try: \n"
+		"				options.binary_location = './.ParanoidFFD.ungoogled-chromium_91.0.4472.164-1.1.AppImage' \n"
+		"				chrome = webdriver.Chrome(options=options, executable_path='./.ParanoidFFD.chromedriver_v91') \n"	//for ungoogled-chromium appimage
+		"			except: \n"
+		"				options.binary_location = '' \n"
+		"				chrome = webdriver.Chrome(options=options, executable_path='./chromedriver') \n"					//for system Chrome
 		
 		"			ogagent = chrome.execute_script(\"return navigator.userAgent\") \n"
 		"			chrome.execute_cdp_cmd(\"Network.setUserAgentOverride\", \n"
@@ -97,7 +119,7 @@ int initializePy () {
 		
 		"			chapter = re.sub(r'<div.*?</div>',r'',chapter, flags=re.DOTALL) \n"
 		"			chapter = re.sub(r'<p[^>]*?(center|left|right|justify).*?>',r'<p style=\"text-align: \\1; text-align-last: \\1;\">',chapter, flags=re.DOTALL) \n"
-	//	"			chapter = re.sub(r'<(p[^( center| left| right| justify))].*?>',r'<p style=\"text-align: \\1; text-align-last: \\1;\">',chapter, flags=re.DOTALL) \n"	//wip
+	//	"			chapter = re.sub(r'<(p[^( center| left| right| justify))].*?>',r'<p style=\"text-align: \\1; text-align-last: \\1;\">',chapter, flags=re.DOTALL) \n"	//wip for fixing broken html
 		"			chapter = re.sub(r'<p (?![^>]*\\b(?:center|right|left|justify)\\b).*?>',r'<p>',chapter, flags=re.DOTALL) \n"
 		"			chapter = re.sub(r'<i .*?>',r'<i>',chapter, flags=re.DOTALL) \n"
 		"			chapter = re.sub(r'<em .*?>',r'<em>',chapter, flags=re.DOTALL) \n"
@@ -105,7 +127,7 @@ int initializePy () {
 		"			chapter = re.sub(r'<b .*?>',r'<b>',chapter, flags=re.DOTALL) \n"
 		"			chapter = re.sub(r'<u .*?>',r'<u>',chapter, flags=re.DOTALL) \n"
 		"			chapter = re.sub(r'(<hr|<br).*?>',r'\\1 />',chapter, flags=re.DOTALL) \n"
-	//	"			chapter = re.sub(r'(<area|<base|<col|<embed|<img|<input|<link|<meta|<param|<source|<track|<wbr).*?>',r'',chapter, flags=re.DOTALL) \n"
+	//	"			chapter = re.sub(r'(<area|<base|<col|<embed|<img|<input|<link|<meta|<param|<source|<track|<wbr).*?>',r'',chapter, flags=re.DOTALL) \n"	//not needed for ffn
 		"			print(\"Finished downloading\", url) \n"
 		"			return chapter \n"
 		
@@ -141,7 +163,6 @@ void Webdriver_Launcher () {
 	while (PyRun_SimpleString(
 		"FLAG_ParanoidFFD_CHROMEID = f\"--ParanoidFFD_CHROMEID={random.randint(100000, 999999)}\" \n"
 		"options = webdriver.ChromeOptions() \n"
-		"options.binary_location = './.ParanoidFFD.ungoogled-chromium_91.0.4472.164-1.1.AppImage' \n"
 		"options.add_argument(FLAG_ParanoidFFD_CHROMEID) \n"
 		"options.add_argument('start-maximized') \n"
 		"options.add_experimental_option('excludeSwitches', ['enable-automation']) \n"
@@ -149,8 +170,12 @@ void Webdriver_Launcher () {
 		"options.headless=True \n"
 		"options.add_argument('--headless') \n"
 		
-		"chrome = webdriver.Chrome(options=options, executable_path='./.ParanoidFFD.chromedriver_v91') \n"	//for ungoogled-chromium
-//		"chrome = webdriver.Chrome(options=options, executable_path='./chromedriver') \n"					//for system Chrome
+		"try: \n"
+		"	options.binary_location = './.ParanoidFFD.ungoogled-chromium_91.0.4472.164-1.1.AppImage' \n"
+		"	chrome = webdriver.Chrome(options=options, executable_path='./.ParanoidFFD.chromedriver_v91') \n"	//for ungoogled-chromium appimage
+		"except: \n"
+		"	options.binary_location = '' \n"
+		"	chrome = webdriver.Chrome(options=options, executable_path='./chromedriver') \n"					//for system Chrome
 		
 		"ogagent = chrome.execute_script(\"return navigator.userAgent\") \n"
 		"chrome.execute_cdp_cmd(\"Network.setUserAgentOverride\", \n"
@@ -276,9 +301,10 @@ void fic_info () {
 	info = PyUnicode_AsUTF8(infoPy);												//info
 	PyObject *chapterlistPy = PyObject_GetAttrString(mainModule, "chapterlist");	//chapter-list
 	totalchapters = PyUnicode_AsUTF8(chapterlistPy);	//for epub output
+	
 	puts("Fanfiction info downloaded\nParsing chapters ...");
 	//chapterlist parsing
-
+	
 	const char * chapterlist = PyUnicode_AsUTF8(chapterlistPy);
 	while(chapterlist) {
 		const char * nextLine = strchr(chapterlist, '\n');
@@ -293,22 +319,30 @@ int main (int argc, char *argv[]) {
 	if (argc == 1) {
 		puts(
 			" ________________________________________________________________________________________ \n"
-			"                 Paranoid FanFiction Downloader v1.2.1.2  by Paranoid-Dev                 \n"
+			"                 Paranoid FanFiction Downloader v1.3.0.0  by Paranoid-Dev                 \n"
 			"                       https://github.com/Paranoid-Dev/ParanoidFFD                        \n"
 			" ________________________________________________________________________________________ \n"
-			" \"ParanoidFFD --help\" to show help page                                                 \n"
+			" \"ParanoidFFD --help\" to show help page                                                   \n"
 		);
 	}
 	else {
 		while (p < argc) {
 			if (strcmp(argv[p], "--version") == 0) {
-				puts("ParanoidFFD 1.2.1.2\n");
+				puts("ParanoidFFD 1.3.0.0");
 			}
 			else if (strcmp(argv[p], "--help") == 0) {
 				help ();
 			}
 			else if (strcmp(argv[p], "-h") == 0) {
 				help ();
+			}
+			else if (strcmp(argv[p], "-t") == 0) {
+				++p;
+				t = atoi(argv[p]);
+				if (t < 1) {
+					printf("invalid thread count : %s\n", argv[p]);
+					exit(5);
+				}
 			}
 			else if (strcmp(argv[p], "-f") == 0) {
 				++p;
@@ -320,12 +354,12 @@ int main (int argc, char *argv[]) {
 				}
 				else {
 					printf("invalid format : %s\n", argv[p]);
-					exit(1);
+					exit(5);
 				}
 			}
 			else if (strcmp(argv[p], "-o") == 0) {
 				++p;
-				fname = 2;	//not using default filename
+				fname = 0;	//not using default filename
 				filename = argv[p];
 			}
 			else if (strcmp(argv[p], "-u") == 0) {
@@ -338,13 +372,13 @@ int main (int argc, char *argv[]) {
 				Py_Launcher ();
 				Webdriver_Launcher ();
 				PyRun_SimpleString(
-					"chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.2.1.2-n') \n"
+					"chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.3.0.0-n') \n"
 					"nextver = chrome.find_element_by_xpath('/html/body/pre').text \n"
 				);
 				PyObject *nextverPy = PyObject_GetAttrString(mainModule, "nextver");
 				const char * nextver = PyUnicode_AsUTF8(nextverPy);
 				if (strcmp(nextver, "NA") == 0) {
-					puts("ParanoidFFD is up to date! ParanoidFFD v1.2.1.2 by Paranoid-Dev");
+					puts("ParanoidFFD is up to date! ParanoidFFD v1.3.0.0 by Paranoid-Dev");
 				}
 				else {
 					puts("ParanoidFFD isn't up to date. Fetching updates info..\nNew version : \n");
@@ -352,7 +386,7 @@ int main (int argc, char *argv[]) {
 						"chrome.get(nextver) \n"
 						"print(chrome.find_element_by_xpath('/html/body/pre').text) \n"
 					);
-					puts("\nCurrent version : ParanoidFFD v1.2.1.2");
+					puts("\nCurrent version : ParanoidFFD v1.3.0.0");
 				}
 				PyRun_SimpleString(
 					"chrome.quit() \n"	
@@ -365,13 +399,13 @@ int main (int argc, char *argv[]) {
 			}
 			else {
 				printf("invalid argument : %s \n", argv[p]);
-				exit(1);
+				exit(5);
 			}
 			++p;
 		}
 		
 		if (down) {
-			printf("Downloading %s ...\n",argv[argvurl]);
+			printf("Downloading %s with %d threads...\n",argv[argvurl],t);
 			
 			Py_Launcher ();
 			char buf[l];
@@ -407,7 +441,11 @@ int main (int argc, char *argv[]) {
 			}
 			puts("Parsed chapters");
 			
-			if (fname == 1) filename = title;	//using title as filename (default)
+			if (fname) filename = title;	//using title as filename (default)
+			
+			char threadPy[10];
+			sprintf(threadPy, "t = %d",t);
+			PyRun_SimpleString(threadPy);
 			
 			int digits = snprintf(0,0,"%+d",j)-1;
 			char chaplist[strlen(url)*j + j*digits + 12];
@@ -420,15 +458,9 @@ int main (int argc, char *argv[]) {
 			}
 			sprintf(chaplist, "%s]", chaplistbuf);
 			PyRun_SimpleString(chaplist);
-			PyRun_SimpleString("chapters = Parallel(n_jobs=5)(delayed(fetch_chapter)(url) for url in urls)");
-		//	PyRun_SimpleString("print(chapters[0])");
+			PyRun_SimpleString("chapters = Parallel(n_jobs=t)(delayed(fetch_chapter)(url) for url in urls)");
 			
 			puts("Download finished\nwriting to file ...");
-			
-	//		printf("\n%s\n",chaptername[1]);
-	//		printf("\n%s\n",chaptername[2]);
-	//		printf("\n%s\n",chaptername[3]);
-	//		printf("\n%s\n",chaptername[4]);
 			
 			if (f == 1) {	//save to text
 				size_t m = 2*strlen(totalchapters) + strlen(title) + strlen(author) + strlen(info) + strlen(summary) + strlen(mark) + 215;
@@ -523,7 +555,6 @@ int main (int argc, char *argv[]) {
 					b = b + 1;
 				}
 				
-				
 				sprintf(contentopf, "zf.writestr(\"content.opf\", \"\"\"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<package xmlns=\"http://www.idpf.org/2007/opf\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" unique-identifier=\"db-id\" version=\"3.0\">\n\n<metadata>\n    <dc:title id=\"t1\">%s</dc:title>\n    <dc:identifier id=\"db-id\">%s-ParanoidFFD</dc:identifier>\n    <meta property=\"dcterms:modified\">%s</meta>\n    <dc:language>en</dc:language>\n</metadata>\n\n<manifest>\n    <item id=\"toc\" properties=\"nav\" href=\"toc.xhtml\" media-type=\"application/xhtml+xml\" />\n    <item id=\"ncx\" href=\"toc.ncx\" media-type=\"application/x-dtbncx+xml\" />\n    <item id=\"template_css\" href=\"template.css\" media-type=\"text/css\" />\n    <item id=\"cover\" href=\"cover.xhtml\" media-type=\"application/xhtml+xml\" />\n%s</manifest>\n\n<spine toc=\"ncx\">\n    <itemref idref=\"cover\" />\n%s</spine>\n\n</package>\"\"\")",title,argv[argvurl],datetime,contentopf_manifest_chapters,contentopf_spine_chapters);	//end line
 				
 				//toc.ncx
@@ -567,31 +598,11 @@ int main (int argc, char *argv[]) {
 				char writeoutput[strlen(output) + 75];
 				sprintf(writeoutput, "zf = zipfile.ZipFile(\"%s\", mode=\"a\", compression=zipfile.ZIP_DEFLATED)",output);
 				
-		//		PyRun_SimpleString("import zipfile");
 				PyRun_SimpleString(writeoutput);
 				PyRun_SimpleString(contentopf);
 				PyRun_SimpleString(tocncx);
 				PyRun_SimpleString(tocxhtml);
 				PyRun_SimpleString(cover);
-				
-				//chapters
-	//			int chapterlen = strlen(chapter[1]) + strlen(chaptername[1])*2;
-	//			for(b = 2; b <= j; b++) {
-	//				if(chapterlen < strlen(chapter[b]) + strlen(chaptername[b])*2) {
-	//					chapterlen = strlen(chapter[b]) + strlen(chaptername[b])*2;
-	//				}
-	//			}
-				
-	//			int chapterlen = 0;
-	//			for (int b = 0; b < j; ++b) {
-	//				PyObject *chapterlenPy = PyObject_GetAttrString(mainModule, chapters[b]);
-	//				int chapterleninter = (int) PyObject_Size(chapterlenPy);
-	//				if(chapterlen < chapterleninter + strlen(chaptername[b])*2) {
-	//					chapterlen = chapterleninter + strlen(chaptername[b])*2;
-	//				}
-	//			}
-				
-	//			char epubchapter[strlen(chaptername[1])*2 + digits + 2900];
 				
 				int chapterlen = 0;
 				for(b = 1; b <= j; b++) {
