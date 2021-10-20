@@ -581,13 +581,32 @@ int main (int argc, char *argv[]) {
 	//					chapterlen = strlen(chapter[b]) + strlen(chaptername[b])*2;
 	//				}
 	//			}
-	//			char epubchapter[chapterlen + 275];
-	//			b = 1;
-	//			while (b <= j) {
-	//				sprintf(epubchapter, "zf.writestr(\"chapter_%d.xhtml\", \"\"\"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:epub=\"http://www.idpf.org/2007/ops\">\n<head>\n<title>%s</title>\n<link href=\"template.css\" rel=\"stylesheet\" type=\"text/css\" />\n</head>\n\n<body>\n\n    <h1>%s</h1>\n    <br />\n    %s\n</body>\n</html>\"\"\")",b,chaptername[b],chaptername[b],chapter[b]);
-	//				PyRun_SimpleString(epubchapter);
-	//				b = b + 1;
+				
+	//			int chapterlen = 0;
+	//			for (int b = 0; b < j; ++b) {
+	//				PyObject *chapterlenPy = PyObject_GetAttrString(mainModule, chapters[b]);
+	//				int chapterleninter = (int) PyObject_Size(chapterlenPy);
+	//				if(chapterlen < chapterleninter + strlen(chaptername[b])*2) {
+	//					chapterlen = chapterleninter + strlen(chaptername[b])*2;
+	//				}
 	//			}
+				
+	//			char epubchapter[strlen(chaptername[1])*2 + digits + 2900];
+				
+				int chapterlen = 0;
+				for(b = 1; b <= j; b++) {
+					if(chapterlen < strlen(chaptername[b])*2 + digits*2 + 370) {
+						chapterlen = strlen(chaptername[b])*2 + digits*2 + 370;
+					}
+				}
+				
+				char epubchapter[chapterlen];
+				b = 1;
+				while (b <= j) {
+					sprintf(epubchapter, "zf.writestr(\"chapter_%d.xhtml\", f'<?xml version=\"1.0\" encoding=\"utf-8\"?>\\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:epub=\"http://www.idpf.org/2007/ops\">\\n<head>\\n<title>%s</title>\\n<link href=\"template.css\" rel=\"stylesheet\" type=\"text/css\" />\\n</head>\\n\\n<body>\\n\\n    <h1>%s</h1>\\n    <br />\\n    {chapters[%d]}\\n</body>\\n</html>')",b,chaptername[b],chaptername[b],b-1);
+					PyRun_SimpleString(epubchapter);
+					b = b + 1;
+				}
 				
 				//finish
 				PyRun_SimpleString("zf.close()");
