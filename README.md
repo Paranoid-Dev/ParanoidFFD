@@ -6,7 +6,7 @@ I was using FanFicFare to download my fanfics, but Fanfiction.net implemented cl
 So I made my own "undetectable" downloader, ParanoidFFD.
 
 ### Dependency
-Chromium appimage and chromedriver for ParanoidFFD in the same directory as ParanoidFFD (Linux only) (recommended) _or_ chromedriver in the same directory as ParanoidFFD and install of Google Chrome / Chromium in the default install path
+Chromium appimage and chromedriver for ParanoidFFD in the same directory as ParanoidFFD (Linux only) (recommended) _**or**_ chromedriver in the same directory as ParanoidFFD and install of Google Chrome / Chromium in the default install path
 
 Python3 (3.6 or higher)
 
@@ -50,6 +50,9 @@ $ ./ParanoidFFD --help
 git clone https://github.com/Paranoid-Dev/ParanoidFFD.git
 cd ParanoidFFD
 pip3 install selenium
+wget https://github.com/Paranoid-Dev/ParanoidFFD/releases/download/v1.3.0.0/ParanoidFFD_chrome.zip # do these to use "Chromium appimage and chromedriver for ParanoidFFD". If you choose not to do this, you have to manually download chromedriver from https://chromedriver.chromium.org/downloads
+unzip ParanoidFFD_chrome.zip
+rm ParanoidFFD_chrome.zip
 gcc parallel-downloader.c -o ParanoidFFD -I/usr/include/python3.9 -lpython3.9 # change python version and Python.h include path to match your system
 ```
 #### How to find Python.h include path and Python version
@@ -60,7 +63,11 @@ $ sudo find / -name Python.h
 ```
 So in my case, my Python version is 3.9, and the Python.h include path is /usr/include/python3.9
 ## Installation (Windows)
-Installation for Windows should be the same as for Linux. I'm working on building a single exe file, but for now, you'll have to compile it yourselves. 
+Installation for Windows should be the same as for Linux, except you have to use system installed Google Chrome / Chromium and download Chromedriver yourself.
+
+And in *parallel-downloader.c*, you have to change *./chromedriver* to *.\chromedriver.exe* (I'll fix this in the next update)
+
+I'm working on building a single exe file, but for now, you'll have to compile it yourselves. 
 ## Installation (Mac)
 ### For "*brew* installed Python" users
 ```
