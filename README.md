@@ -4,6 +4,8 @@ Undetectable FanFiction Downloader with Parallel Downloading
 I was using FanFicFare to download my fanfics, but Fanfiction.net implemented cloudflare which blocks automated downloader scripts, leading to FanFicFare not working. 
 
 So I made my own "undetectable" downloader, ParanoidFFD.
+## Notice
+parallel-downloader.c has a critical bug and memory leak, use https://github.com/Paranoid-Dev/ParanoidFFD/tree/f9e97f00a2577770fc608b396898db4f5ee89c92 until it is fixed!
 
 ### Dependency
 [Chromium appimage and chromedriver for ParanoidFFD](https://github.com/Paranoid-Dev/ParanoidFFD/releases/download/v1.3.0.0/ParanoidFFD_chrome.zip) in the same directory as ParanoidFFD (Linux only) (recommended) _**or**_  [chromedriver](https://chromedriver.chromium.org/downloads) in the same directory as ParanoidFFD and install of Google Chrome / Chromium in the default install path
