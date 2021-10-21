@@ -80,6 +80,7 @@ int initializePy () {
 		"import zipfile \n"
 		"import base64 \n"
 		"import psutil \n"
+		"from time import sleep \n"
 //		------------------------------------------------
 		"def fetch_chapter(url): \n"
 		
@@ -133,13 +134,14 @@ int initializePy () {
 		"			return chapter \n"
 		
 		"		except: \n"
-		"			print(\"Failed to download \", url, \" , trying again..\") \n"
+		"			print(\"Failed to download \", url, \" , trying again after 15 seconds..\") \n"
 		"			chrome.quit() \n"	
 		"			processes = psutil.process_iter() \n"
 		"			for process in processes: \n"
 		"				if FLAG_ParanoidFFD_CHROMEID in process.cmdline(): \n"
 		"					process.terminate() \n"
-		"	print(\"Failed to download \", url, \"Try again later or open an issue at github.com/Paranoid-Dev/ParanoidFFD\") \n"
+		"			sleep(15) \n"
+		"	print(\"Failed to download \", url, \"Try again later (with less parallel threads) or open an issue at github.com/Paranoid-Dev/ParanoidFFD\") \n"
 		"	return 'Failed to download {}'.format(url) \n"
 //		------------------------------------------------
 	);

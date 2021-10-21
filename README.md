@@ -1,15 +1,17 @@
 # ParanoidFFD
 Undetectable FanFiction Downloader with Parallel Downloading
 
-I was using FanFicFare to download my fanfics, but Fanfiction.net implemented cloudflare which blocks automated downloader scripts, leading to FanFicFare not working. 
+The program I was using to download my fanfics broke when fanfiction.net implemented cloudflare which blocks automated downloader scripts. 
 
 So I made my own "undetectable" downloader, ParanoidFFD.
 ### Dependency
-[Chromium appimage and chromedriver for ParanoidFFD](https://github.com/Paranoid-Dev/ParanoidFFD/releases/download/v1.3.0.0/ParanoidFFD_chrome.zip) in the same directory as ParanoidFFD (Linux only) (recommended) _**or**_  [chromedriver](https://chromedriver.chromium.org/downloads) in the same directory as ParanoidFFD and install of Google Chrome / Chromium in the default install path
+[Chromium appimage and chromedriver for ParanoidFFD](https://github.com/Paranoid-Dev/ParanoidFFD/releases/download/v1.3.0.0/ParanoidFFD_chrome.zip) in the same directory as ParanoidFFD (Linux only) (recommended) _**or**_  [chromedriver](https://chromedriver.chromium.org/downloads) in the same directory as ParanoidFFD and install of Google Chrome / Chromium in the default install path. 
+
+Depending on your system, using system installed chrome and chromedriver might have faster download speeds. 
 
 Python3 (3.6 or higher)
 
-Python selenium,joblib,re,random,zipfile,base64,psutil modules
+Python selenium,joblib,re,random,zipfile,base64,time,psutil modules
 
 You can delete every file/folder in this repo once you've compiled ParanoidFFD - ParanoidFFD doesn't require any files/folders in this repo to run. You need only chromedriver (and appimage). 
 ### Build dependency
@@ -44,7 +46,7 @@ $ ./ParanoidFFD --help
    ParanoidFFD --check-update                                                             
  ________________________________________________________________________________________ 
  ```
-Using ParanoidFFD may get you (temporarily) banned. Use with caution, especially with parallel downloading. High parallel download threads are okay to use for short periods of time, but not for long periods of time. For example, 6 threads is probably okay for a 30 chapter fic, but downloading a 90 chapter fic with 4 threads will probably lead to a captcha and ParanoidFFD failing to download. 
+Using ParanoidFFD may get you (temporarily) banned. Use with caution, especially with parallel downloading. High parallel download threadcount is okay to use for short periods of time, but not for long periods of time. For example, 6 threads is probably okay for a 30 chapter fic, but downloading a 90 chapter fic with 4 threads will probably lead to a captcha and ParanoidFFD failing to download. 
 ## Installation (Linux)
 ```
 git clone https://github.com/Paranoid-Dev/ParanoidFFD.git
