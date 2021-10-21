@@ -36,12 +36,12 @@ int argvurl;
 size_t l;	//buffer size
 int j = 1;	//total chapters
 int errnum = 0;
-int t = 3;	//threads
+int t = 2;	//threads
 
 void help () {
 	puts(
 		" ________________________________________________________________________________________ \n"
-		"                 Paranoid FanFiction Downloader v1.3.0.0  by Paranoid-Dev                 \n"
+		"                 Paranoid FanFiction Downloader v1.3.0.1  by Paranoid-Dev                 \n"
 		"                       https://github.com/Paranoid-Dev/ParanoidFFD                        \n"
 		" ________________________________________________________________________________________ \n"
 		"                                                                                          \n"
@@ -55,7 +55,8 @@ void help () {
 		"   -o <FILE_NAME>      : save fanfiction as <FILE_NAME>.<FORMAT>                          \n"
 		"                         default : fanfiction_title.<FORMAT>                              \n"
 		"   -t <n>              : numder of parallel download threads, use a positive integer      \n"
-		"                         default : 3                                                      \n"
+		"                         default : 2                                                      \n"
+		"                         WARNING; high threadcount use for long fics may trigger captchas \n"
 		"   --version           : show ParanoidFFD version                                         \n"
 		"   --check-update      : check for new updates                                            \n"
 		"   -h , --help         : show this page                                                   \n"
@@ -319,7 +320,7 @@ int main (int argc, char *argv[]) {
 	if (argc == 1) {
 		puts(
 			" ________________________________________________________________________________________ \n"
-			"                 Paranoid FanFiction Downloader v1.3.0.0  by Paranoid-Dev                 \n"
+			"                 Paranoid FanFiction Downloader v1.3.0.1  by Paranoid-Dev                 \n"
 			"                       https://github.com/Paranoid-Dev/ParanoidFFD                        \n"
 			" ________________________________________________________________________________________ \n"
 			" \"ParanoidFFD --help\" to show help page                                                   \n"
@@ -328,7 +329,7 @@ int main (int argc, char *argv[]) {
 	else {
 		while (p < argc) {
 			if (strcmp(argv[p], "--version") == 0) {
-				puts("ParanoidFFD 1.3.0.0");
+				puts("ParanoidFFD 1.3.0.1");
 			}
 			else if (strcmp(argv[p], "--help") == 0) {
 				help ();
@@ -372,13 +373,13 @@ int main (int argc, char *argv[]) {
 				Py_Launcher ();
 				Webdriver_Launcher ();
 				PyRun_SimpleString(
-					"chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.3.0.0-n') \n"
+					"chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.3.0.1-n') \n"
 					"nextver = chrome.find_element_by_xpath('/html/body/pre').text \n"
 				);
 				PyObject *nextverPy = PyObject_GetAttrString(mainModule, "nextver");
 				const char * nextver = PyUnicode_AsUTF8(nextverPy);
 				if (strcmp(nextver, "NA") == 0) {
-					puts("ParanoidFFD is up to date! ParanoidFFD v1.3.0.0 by Paranoid-Dev");
+					puts("ParanoidFFD is up to date! ParanoidFFD v1.3.0.1 by Paranoid-Dev");
 				}
 				else {
 					puts("ParanoidFFD isn't up to date. Fetching updates info..\nNew version : \n");
@@ -386,7 +387,7 @@ int main (int argc, char *argv[]) {
 						"chrome.get(nextver) \n"
 						"print(chrome.find_element_by_xpath('/html/body/pre').text) \n"
 					);
-					puts("\nCurrent version : ParanoidFFD v1.3.0.0");
+					puts("\nCurrent version : ParanoidFFD v1.3.0.1");
 				}
 				PyRun_SimpleString(
 					"chrome.quit() \n"	
@@ -423,20 +424,21 @@ int main (int argc, char *argv[]) {
 			url = PyUnicode_AsUTF8(urlPy);													//url
 			
 			fic_info ();
-			char* chaptername[j];
 			int z = 1;
 			PyObject *chapterlistPy = PyObject_GetAttrString(mainModule, "chapterlist");	//chapter-list
 			const char * chapterlist = PyUnicode_AsUTF8(chapterlistPy);
+			int chapterlistsize = (int) PyObject_Size(chapterlistPy);
+			char chaptername[j+2][chapterlistsize];
 			while(chapterlist) {
 				const char * nextLine = strchr(chapterlist, '\n');
 				int chapterlistLen = nextLine ? (nextLine-chapterlist) : strlen(chapterlist);
-				chaptername[z] = (char *) malloc(chapterlistLen+1);
 				if (chaptername[z]) {
 					memcpy(chaptername[z], chapterlist, chapterlistLen);
 					chaptername[z][chapterlistLen] = '\0';  // NUL-terminate
+					printf("[ %s ]\n", chaptername[z]);
 					++z;
 				}
-				else printf("chapter parsing failed - please open an issue at github.com/Paranoid-Dev/ParanoidFFD\n");
+				else puts("chapter parsing failed - please open an issue at github.com/Paranoid-Dev/ParanoidFFD");
 				chapterlist = nextLine ? (nextLine+1) : NULL;
 			}
 			puts("Parsed chapters");
