@@ -41,7 +41,7 @@ int t = 2;	//threads
 void help () {
 	puts(
 		" ________________________________________________________________________________________ \n"
-		"                 Paranoid FanFiction Downloader v1.3.0.1  by Paranoid-Dev                 \n"
+		"                 Paranoid FanFiction Downloader v1.3.1.0  by Paranoid-Dev                 \n"
 		"                       https://github.com/Paranoid-Dev/ParanoidFFD                        \n"
 		" ________________________________________________________________________________________ \n"
 		"                                                                                          \n"
@@ -322,7 +322,7 @@ int main (int argc, char *argv[]) {
 	if (argc == 1) {
 		puts(
 			" ________________________________________________________________________________________ \n"
-			"                 Paranoid FanFiction Downloader v1.3.0.1  by Paranoid-Dev                 \n"
+			"                 Paranoid FanFiction Downloader v1.3.1.0  by Paranoid-Dev                 \n"
 			"                       https://github.com/Paranoid-Dev/ParanoidFFD                        \n"
 			" ________________________________________________________________________________________ \n"
 			" \"ParanoidFFD --help\" to show help page                                                   \n"
@@ -331,7 +331,7 @@ int main (int argc, char *argv[]) {
 	else {
 		while (p < argc) {
 			if (strcmp(argv[p], "--version") == 0) {
-				puts("ParanoidFFD 1.3.0.1");
+				puts("ParanoidFFD 1.3.1.0");
 			}
 			else if (strcmp(argv[p], "--help") == 0) {
 				help ();
@@ -375,13 +375,13 @@ int main (int argc, char *argv[]) {
 				Py_Launcher ();
 				Webdriver_Launcher ();
 				PyRun_SimpleString(
-					"chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.3.0.1-n') \n"
+					"chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.3.1.0-n') \n"
 					"nextver = chrome.find_element_by_xpath('/html/body/pre').text \n"
 				);
 				PyObject *nextverPy = PyObject_GetAttrString(mainModule, "nextver");
 				const char * nextver = PyUnicode_AsUTF8(nextverPy);
 				if (strcmp(nextver, "NA") == 0) {
-					puts("ParanoidFFD is up to date! ParanoidFFD v1.3.0.1 by Paranoid-Dev");
+					puts("ParanoidFFD is up to date! ParanoidFFD v1.3.1.0 by Paranoid-Dev");
 				}
 				else {
 					puts("ParanoidFFD isn't up to date. Fetching updates info..\nNew version : \n");
@@ -389,7 +389,7 @@ int main (int argc, char *argv[]) {
 						"chrome.get(nextver) \n"
 						"print(chrome.find_element_by_xpath('/html/body/pre').text) \n"
 					);
-					puts("\nCurrent version : ParanoidFFD v1.3.0.1");
+					puts("\nCurrent version : ParanoidFFD v1.3.1.0");
 				}
 				PyRun_SimpleString(
 					"chrome.quit() \n"	

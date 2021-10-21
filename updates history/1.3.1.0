@@ -1,4 +1,4 @@
-Paranoid FanFiction Downloader v1.3.0.1  by Paranoid-Dev
+Paranoid FanFiction Downloader v1.3.1.0  by Paranoid-Dev
 
 | v1.1.0 |
 New file writing function
@@ -39,4 +39,7 @@ Support for parallel downloading, download retries when errors occur, added mark
 | v1.3.0.1 |
 Many bug fixes
 
-Download at https://github.com/Paranoid-Dev/ParanoidFFD/tree/35bd62ddaba800e19b02cad89ccc5dee79ca88fa
+| v1.3.1.0 |
+Added 15 second delay between chapter download retries
+
+Download at https://github.com/Paranoid-Dev/ParanoidFFD
