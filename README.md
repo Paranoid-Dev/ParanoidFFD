@@ -5,15 +5,19 @@ The program I was using to download my fanfics broke when fanfiction.net impleme
 
 So I made my own "undetectable" downloader, ParanoidFFD.
 ### Dependency
-[Chromium appimage and chromedriver for ParanoidFFD](https://github.com/Paranoid-Dev/ParanoidFFD/releases/download/v1.3.0.0/ParanoidFFD_chrome.zip) in the same directory as ParanoidFFD (Linux only) (recommended) _**or**_  [chromedriver](https://chromedriver.chromium.org/downloads) in the same directory as ParanoidFFD and install of Google Chrome / Chromium in the default install path. 
+* [Chromium appimage and chromedriver for ParanoidFFD](https://github.com/Paranoid-Dev/ParanoidFFD/releases/download/v1.3.0.0/ParanoidFFD_chrome.zip) in the same directory as ParanoidFFD (Linux only)
 
-Depending on your system, using system installed chrome and chromedriver might have faster download speeds. 
+  _**or**_ 
 
-Python3 (3.6 or higher)
+  [chromedriver](https://chromedriver.chromium.org/downloads) in the same directory as ParanoidFFD and system install of Google Chrome / Chromium in the default install path. 
+  
+  Depending on your system, using system installed chrome and chromedriver might have faster download speeds. 
 
-Python selenium,joblib,re,random,zipfile,base64,time,psutil modules
+* Python3 (3.6 or higher)
 
-You can delete every file/folder in this repo once you've compiled ParanoidFFD - ParanoidFFD doesn't require any files/folders in this repo to run. You need only chromedriver (and appimage). 
+* Python selenium,joblib,re,random,zipfile,base64,time,psutil modules
+
+* You can delete every file/folder in this repo once you've compiled ParanoidFFD - ParanoidFFD doesn't require any files/folders in this repo to run. You need only chromedriver (and appimage). 
 ### Build dependency
 C compiler
 
@@ -53,12 +57,14 @@ git clone https://github.com/Paranoid-Dev/ParanoidFFD.git
 cd ParanoidFFD
 pip3 install selenium joblib psutil
 
-# do these to use "Chromium appimage and chromedriver for ParanoidFFD". If you choose not to do this, you have to manually download chromedriver from https://chromedriver.chromium.org/downloads
+# do these to use "Chromium appimage and chromedriver for ParanoidFFD". 
+# If you choose not to do this, you have to manually download chromedriver from https://chromedriver.chromium.org/downloads
 wget https://github.com/Paranoid-Dev/ParanoidFFD/releases/download/v1.3.0.0/ParanoidFFD_chrome.zip
 unzip ParanoidFFD_chrome.zip
 rm ParanoidFFD_chrome.zip
 
-gcc parallel-downloader.c -o ParanoidFFD -I/usr/include/python3.9 -lpython3.9 # change python version and Python.h include path to match your system
+# change python version and Python.h include path to match your system
+gcc parallel-downloader.c -o ParanoidFFD -I/usr/include/python3.9 -lpython3.9
 ```
 #### How to find Python.h include path and Python version
 ```
@@ -72,7 +78,7 @@ WARNING; if you have multiple versions of Python 3 installed, you must compile w
 ## Installation (Windows)
 Installation for Windows should be the same as for Linux, except you have to use system installed Google Chrome / Chromium and download Chromedriver yourself.
 
-And in *parallel-downloader.c*, you have to change *./chromedriver* to *.\chromedriver.exe* (I'll fix this in the comming updates)
+And in *parallel-downloader.c*, you have to change *./chromedriver* to *.\chromedriver.exe* (I'll fix this in the coming updates)
 
 I'm working on building a single exe file, but for now, you'll have to compile it yourselves. 
 ## Installation (MacOS)

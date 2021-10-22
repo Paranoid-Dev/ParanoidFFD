@@ -41,7 +41,7 @@ int t = 2;	//threads
 void help () {
 	puts(
 		" ________________________________________________________________________________________ \n"
-		"                 Paranoid FanFiction Downloader v1.3.1.0  by Paranoid-Dev                 \n"
+		"                 Paranoid FanFiction Downloader v1.3.1.1  by Paranoid-Dev                 \n"
 		"                       https://github.com/Paranoid-Dev/ParanoidFFD                        \n"
 		" ________________________________________________________________________________________ \n"
 		"                                                                                          \n"
@@ -86,7 +86,7 @@ int initializePy () {
 		
 		"	for iter in range(1,10): \n"
 		"		try: \n"
-		"			print(\"Downloading\", url, \"...\") \n"
+		"			print(\"Downloading [\", url, \"]...\") \n"
 		
 		"			FLAG_ParanoidFFD_CHROMEID = f\"--ParanoidFFD_CHROMEID={random.randint(100000, 999999)}\" \n"
 		"			options = webdriver.ChromeOptions() \n"
@@ -130,7 +130,7 @@ int initializePy () {
 		"			chapter = re.sub(r'<u .*?>',r'<u>',chapter, flags=re.DOTALL) \n"
 		"			chapter = re.sub(r'(<hr|<br).*?>',r'\\1 />',chapter, flags=re.DOTALL) \n"
 	//	"			chapter = re.sub(r'(<area|<base|<col|<embed|<img|<input|<link|<meta|<param|<source|<track|<wbr).*?>',r'',chapter, flags=re.DOTALL) \n"	//not needed for ffn
-		"			print(\"Finished downloading\", url) \n"
+		"			print(\"Finished downloading [\", url, \"]\") \n"
 		"			return chapter \n"
 		
 		"		except: \n"
@@ -159,7 +159,7 @@ void Py_Launcher () {
 		Py_Finalize();
 	}
 	errnum = 0;
-	puts("ParanoidFFD Py initialized!");
+	puts("ParanoidFFD Py initialized");
 }
 
 void Webdriver_Launcher () {
@@ -210,7 +210,7 @@ void Webdriver_Launcher () {
 		);
 	}
 	errnum = 0;
-	puts("ParanoidFFD Webdriver initialized!");
+	puts("ParanoidFFD Webdriver initialized");
 }
 
 void fic_info () {
@@ -322,7 +322,7 @@ int main (int argc, char *argv[]) {
 	if (argc == 1) {
 		puts(
 			" ________________________________________________________________________________________ \n"
-			"                 Paranoid FanFiction Downloader v1.3.1.0  by Paranoid-Dev                 \n"
+			"                 Paranoid FanFiction Downloader v1.3.1.1  by Paranoid-Dev                 \n"
 			"                       https://github.com/Paranoid-Dev/ParanoidFFD                        \n"
 			" ________________________________________________________________________________________ \n"
 			" \"ParanoidFFD --help\" to show help page                                                   \n"
@@ -331,7 +331,7 @@ int main (int argc, char *argv[]) {
 	else {
 		while (p < argc) {
 			if (strcmp(argv[p], "--version") == 0) {
-				puts("ParanoidFFD 1.3.1.0");
+				puts("ParanoidFFD 1.3.1.1");
 			}
 			else if (strcmp(argv[p], "--help") == 0) {
 				help ();
@@ -375,13 +375,13 @@ int main (int argc, char *argv[]) {
 				Py_Launcher ();
 				Webdriver_Launcher ();
 				PyRun_SimpleString(
-					"chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.3.1.0-n') \n"
+					"chrome.get('https://raw.githubusercontent.com/Paranoid-Dev/ParanoidFFD/main/updates%20history/1.3.1.1-n') \n"
 					"nextver = chrome.find_element_by_xpath('/html/body/pre').text \n"
 				);
 				PyObject *nextverPy = PyObject_GetAttrString(mainModule, "nextver");
 				const char * nextver = PyUnicode_AsUTF8(nextverPy);
 				if (strcmp(nextver, "NA") == 0) {
-					puts("ParanoidFFD is up to date! ParanoidFFD v1.3.1.0 by Paranoid-Dev");
+					puts("ParanoidFFD is up to date! ParanoidFFD v1.3.1.1 by Paranoid-Dev");
 				}
 				else {
 					puts("ParanoidFFD isn't up to date. Fetching updates info..\nNew version : \n");
@@ -389,7 +389,7 @@ int main (int argc, char *argv[]) {
 						"chrome.get(nextver) \n"
 						"print(chrome.find_element_by_xpath('/html/body/pre').text) \n"
 					);
-					puts("\nCurrent version : ParanoidFFD v1.3.1.0");
+					puts("\nCurrent version : ParanoidFFD v1.3.1.1");
 				}
 				PyRun_SimpleString(
 					"chrome.quit() \n"	
@@ -464,7 +464,7 @@ int main (int argc, char *argv[]) {
 			PyRun_SimpleString(chaplist);
 			PyRun_SimpleString("chapters = Parallel(n_jobs=t)(delayed(fetch_chapter)(url) for url in urls)");
 			
-			puts("Download finished\nwriting to file ...");
+			puts("Download finished\nWriting to file ...");
 			
 			if (f == 1) {	//save to text
 				size_t m = 2*strlen(totalchapters) + strlen(title) + strlen(author) + strlen(info) + strlen(summary) + strlen(mark) + 215;
@@ -522,7 +522,7 @@ int main (int argc, char *argv[]) {
 					sprintf(buf1, "%s%s\n\n",buf2,chapter);
 				}
 				
-				printf("saving to \"%s.txt\"\n",filename);
+				printf("Saving to \"%s.txt\"\n",filename);
 				FILE *fp;
 				char output[strlen(filename)+5];
 				sprintf(output, "%s.txt",filename);
@@ -618,7 +618,7 @@ int main (int argc, char *argv[]) {
 				char epubchapter[chapterlen];
 				b = 1;
 				while (b <= j) {
-					sprintf(epubchapter, "zf.writestr(\"chapter_%d.xhtml\", f'<?xml version=\"1.0\" encoding=\"utf-8\"?>\\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:epub=\"http://www.idpf.org/2007/ops\">\\n<head>\\n<title>%s</title>\\n<link href=\"template.css\" rel=\"stylesheet\" type=\"text/css\" />\\n</head>\\n\\n<body>\\n\\n    <h1>%s</h1>\\n    <br />\\n    {chapters[%d]}\\n</body>\\n</html>')",b,chaptername[b],chaptername[b],b-1);
+					sprintf(epubchapter, "zf.writestr(\"chapter_%d.xhtml\", f\"\"\"<?xml version=\"1.0\" encoding=\"utf-8\"?>\\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:epub=\"http://www.idpf.org/2007/ops\">\\n<head>\\n<title>%s</title>\\n<link href=\"template.css\" rel=\"stylesheet\" type=\"text/css\" />\\n</head>\\n\\n<body>\\n\\n    <h1>%s</h1>\\n    <br />\\n    {chapters[%d]}\\n</body>\\n</html>\"\"\")",b,chaptername[b],chaptername[b],b-1);
 					PyRun_SimpleString(epubchapter);
 					b = b + 1;
 				}
